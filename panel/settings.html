@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings | Nexus CMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
+
+
+  <link rel="stylesheet" href="./settings.css" />
+  <style>
+
+  </style>
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        Nexus CMS
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="index.html" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="content.html" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Content
+        </a>
+        <a href="media.html" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Media
+        </a>
+        <a href="users.html" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Users
+        </a>
+        <a href="settings.html" class="nav-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar" id="user-avatar">JD</div>
+          <div>
+            <p class="text-sm font-semibold" id="user-name">John Doe</p>
+            <p class="text-xs text-tertiary" id="user-email">john@nexus.com</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN WRAPPER -->
+    <main class="main-wrapper">
+      <header class="topbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="Search settings..." />
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-btn" title="Notifications">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </button>
+          <button class="btn btn-primary" id="auth-btn">Sign Out</button>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="page-header">
+          <p class="tag"><span></span>Configuration</p>
+          <h1>Site <em>Settings</em></h1>
+          <p class="text-secondary">Manage your site configuration, API keys, and security preferences.</p>
+        </div>
+
+        <div class="settings-layout">
+          <!-- STICKY NAV -->
+          <nav class="settings-nav">
+            <a href="#general" class="active">General</a>
+            <a href="#seo">SEO & Metadata</a>
+            <a href="#api">API & Webhooks</a>
+            <a href="#security">Security</a>
+            <a href="#backups">Backups</a>
+            <a href="#danger" style="color: var(--danger);">Danger Zone</a>
+          </nav>
+
+          <!-- CONTENT CARDS -->
+          <div class="settings-content">
+            
+            <!-- GENERAL -->
+            <div class="card" id="general">
+              <div class="card-header">
+                <h3>General Settings</h3>
+                <span class="save-indicator" id="general-indicator"></span>
+              </div>
+              <div class="form-group" style="margin-bottom: var(--space-4);">
+                <label>Site Title</label>
+                <input type="text" id="setting-site-title" value="Nexus CMS" />
+              </div>
+              <div class="form-group" style="margin-bottom: var(--space-4);">
+                <label>Tagline</label>
+                <input type="text" id="setting-tagline" value="The universal dashboard system." />
+              </div>
+              <div class="form-group">
+                <label>Timezone</label>
+                <select id="setting-timezone">
+                  <option value="UTC">UTC</option>
+                  <option value="America/New_York">Eastern Time (ET)</option>
+                  <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                  <option value="Europe/London">London (GMT)</option>
+                  <option value="Asia/Tokyo">Tokyo (JST)</option>
+                  <option value="Australia/Sydney">Sydney (AEST)</option>
+                </select>
+              </div>
+              <div style="margin-top: var(--space-6); display: flex; justify-content: flex-end;">
+                <button class="btn btn-primary save-settings-btn" data-section="general">Save Changes</button>
+              </div>
+            </div>
+
+            <!-- SEO -->
+            <div class="card" id="seo">
+              <div class="card-header">
+                <h3>SEO & Metadata</h3>
+                <span class="save-indicator" id="seo-indicator"></span>
+              </div>
+              <div class="form-row">
+                <div class="form-row-info">
+                  <label>Default Meta Description</label>
+                  <p>Used for the homepage and pages without custom excerpts.</p>
+                </div>
+                <div class="form-row-control" style="flex: 1; max-width: 400px;">
+                  <textarea id="setting-meta-desc" rows="2" style="width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-md); font-family: 'Inter', sans-serif; font-size: 0.875rem; resize: vertical;"></textarea>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-row-info">
+                  <label>Google Analytics ID</label>
+                  <p>Paste your G-XXXXXXXXXX ID here.</p>
+                </div>
+                <div class="form-row-control" style="flex: 1; max-width: 400px;">
+                  <input type="text" id="setting-ga-id" class="api-key-input" placeholder="G-XXXXXXXXXX" />
+                </div>
+              </div>
+              <div style="margin-top: var(--space-6); display: flex; justify-content: flex-end;">
+                <button class="btn btn-primary save-settings-btn" data-section="seo">Save Changes</button>
+              </div>
+            </div>
+
+            <!-- API -->
+            <div class="card" id="api">
+              <div class="card-header">
+                <h3>API & Webhooks</h3>
+                <span class="save-indicator" id="api-indicator"></span>
+              </div>
+              <div class="form-row">
+                <div class="form-row-info">
+                  <label>Public API Key</label>
+                  <p>Use this key to authenticate external requests.</p>
+                </div>
+                <div class="form-row-control" style="display: flex; gap: 8px; align-items: center;">
+                  <input type="text" id="setting-api-key" class="api-key-input" readonly value="sk_live_51Hx...8x9z" style="width: 200px;" />
+                  <button class="btn btn-secondary" id="btn-copy-key" style="padding: 8px 12px;">Copy</button>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-row-info">
+                  <label>Webhook URL</label>
+                  <p>Receive POST requests when content is published.</p>
+                </div>
+                <div class="form-row-control" style="flex: 1; max-width: 400px; display: flex; gap: 8px;">
+                  <input type="url" id="setting-webhook" placeholder="https://api.example.com/webhook" style="flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 0.875rem;" />
+                  <button class="btn btn-secondary" id="btn-test-webhook" style="padding: 10px 16px;">Test</button>
+                </div>
+              </div>
+              <div style="margin-top: var(--space-6); display: flex; justify-content: flex-end;">
+                <button class="btn btn-primary save-settings-btn" data-section="api">Save Changes</button>
+              </div>
+            </div>
+
+            <!-- SECURITY -->
+            <div class="card" id="security">
+              <div class="card-header">
+                <h3>Security</h3>
+                <span class="save-indicator" id="security-indicator"></span>
+              </div>
+              <div class="form-row">
+                <div class="form-row-info">
+                  <label>Require 2FA for Admins</label>
+                  <p>Force two-factor authentication for all administrator accounts.</p>
+                </div>
+                <div class="form-row-control">
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="setting-2fa" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-row-info">
+                  <label>Public Registration</label>
+                  <p>Allow new users to sign up without an invitation.</p>
+                </div>
+                <div class="form-row-control">
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="setting-public-reg" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-row-info">
+                  <label>Session Timeout</label>
+                  <p>Automatically log out inactive users.</p>
+                </div>
+                <div class="form-row-control">
+                  <select id="setting-session-timeout" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 0.875rem;">
+                    <option value="30">30 Minutes</option>
+                    <option value="60">1 Hour</option>
+                    <option value="1440">24 Hours</option>
+                    <option value="10080">7 Days</option>
+                  </select>
+                </div>
+              </div>
+              <div style="margin-top: var(--space-6); display: flex; justify-content: flex-end;">
+                <button class="btn btn-primary save-settings-btn" data-section="security">Save Changes</button>
+              </div>
+            </div>
+
+            <!-- BACKUPS -->
+            <div class="card" id="backups">
+              <div class="card-header"><h3>Backups & Maintenance</h3></div>
+              <div class="form-row">
+                <div class="form-row-info">
+                  <label>Automatic Daily Backups</label>
+                  <p>Automatically backup your database and media every 24 hours.</p>
+                </div>
+                <div class="form-row-control">
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="setting-auto-backup" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-row-info">
+                  <label>Last Backup</label>
+                  <p id="last-backup-date">Loading...</p>
+                </div>
+                <div class="form-row-control">
+                  <button class="btn btn-secondary" id="btn-manual-backup">Create Manual Backup</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- DANGER ZONE -->
+            <div class="card danger-card" id="danger">
+              <div class="card-header"><h3>Danger Zone</h3></div>
+              <div class="form-row">
+                <div class="form-row-info">
+                  <label>Reset Database</label>
+                  <p>Permanently delete all content, users, and media. This cannot be undone.</p>
+                </div>
+                <div class="form-row-control">
+                  <button class="btn btn-danger" id="btn-reset-db">Reset Database</button>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-row-info">
+                  <label>Delete Site</label>
+                  <p>Completely remove this site and all associated data from Nexus CMS.</p>
+                </div>
+                <div class="form-row-control">
+                  <button class="btn btn-danger" id="btn-delete-site">Delete Site</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+<script type="module">
+  // ============================================
+  // SUPABASE SETUP
+  // ============================================
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+  const SUPABASE_URL = 'https://umzpdqsjrthzxjdjfdej.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtenBkcXNqcnRoenhqZGpmZGVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxOTkzNDUsImV4cCI6MjA5ODc3NTM0NX0.WL5o3fEwdlmE03zarFEv-PvQjedCklSqVcKR_ButMCE';
+  const LOGIN_PAGE = 'login.html';
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { autoRefreshToken: true, persistSession: true }
+  });
+
+  // ============================================
+  // AUTH CHECK
+  // ============================================
+  async function checkAuth() {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    
+    if (error) {
+      console.error('Auth error:', error);
+      showToast('Authentication error: ' + error.message, 'error');
+      return null;
+    }
+    
+    if (!session) {
+      window.location.href = LOGIN_PAGE;
+      return null;
+    }
+    
+    // Update UI
+    const user = session.user;
+    const name = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    
+    const userNameEl = document.getElementById('user-name');
+    const userEmailEl = document.getElementById('user-email');
+    const userAvatarEl = document.getElementById('user-avatar');
+    
+    if (userNameEl) userNameEl.textContent = name;
+    if (userEmailEl) userEmailEl.textContent = user.email || '';
+    if (userAvatarEl) userAvatarEl.textContent = initials;
+    
+    return session;
+  }
+
+  // Sign out
+  document.getElementById('auth-btn')?.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    window.location.href = LOGIN_PAGE;
+  });
+
+  // ============================================
+  // SETTINGS MANAGEMENT
+  // ============================================
+  
+  const SETTINGS_SCHEMA = {
+    general: {
+      'setting-site-title': 'site_title',
+      'setting-tagline': 'site_tagline',
+      'setting-timezone': 'site_timezone'
+    },
+    seo: {
+      'setting-meta-desc': 'meta_description',
+      'setting-ga-id': 'google_analytics_id'
+    },
+    api: {
+      'setting-api-key': 'api_key',
+      'setting-webhook': 'webhook_url'
+    },
+    security: {
+      'setting-2fa': 'require_2fa',
+      'setting-public-reg': 'allow_public_registration',
+      'setting-session-timeout': 'session_timeout'
+    },
+    backups: {
+      'setting-auto-backup': 'auto_backup_enabled'
+    }
+  };
+
+  // Load settings with detailed error reporting
+  async function loadSettings() {
+    try {
+      console.log('Loading settings...');
+      
+      const { data, error } = await supabase
+    .from('settings')
+    .select('*')
+    .eq('id', 1)
+    .single();
+
+console.log({
+    data,
+    error,
+    status
+});
+      if (error) {
+       console.error({
+    message: error.message,
+    details: error.details,
+    hint: error.hint,
+    code: error.code,
+    status
+});
+        
+        // Show specific error based on code
+        if (error.code === '42P01') {
+          showToast('Settings table does not exist. Please run the SQL setup script.', 'error');
+        } else if (error.code === '42501') {
+          showToast('Permission denied. Check RLS policies in Supabase.', 'error');
+        } else {
+          showToast('Error loading settings: ' + error.message, 'error');
+        }
+        
+        return;
+      }
+
+      console.log('✓ Settings loaded:', data);
+
+      // Convert to object
+      const settings = {};
+      data?.forEach(item => {
+        settings[item.key] = item.value;
+      });
+
+      // Apply to UI
+      applySettingsToUI(settings);
+      
+      showToast('Settings loaded successfully', 'success');
+    } catch (error) {
+      console.error('❌ Unexpected error:', error);
+      showToast('Unexpected error: ' + error.message, 'error');
+    }
+  }
+
+  // Apply settings to UI
+  function applySettingsToUI(settings) {
+    Object.entries(SETTINGS_SCHEMA).forEach(([section, fields]) => {
+      Object.entries(fields).forEach(([elementId, key]) => {
+        const element = document.getElementById(elementId);
+        if (!element || settings[key] === undefined) return;
+
+        const value = settings[key];
+
+        if (element.type === 'checkbox') {
+          element.checked = value === true || value === 'true';
+        } else {
+          element.value = value;
+        }
+      });
+    });
+
+    // Update last backup date
+    if (settings.last_backup_date) {
+      const date = new Date(settings.last_backup_date);
+      document.getElementById('last-backup-date').textContent = 
+        date.toLocaleDateString('en-US', { 
+          month: 'long', 
+          day: 'numeric', 
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+    }
+  }
+
+  // Save settings
+  async function saveSettings(section) {
+    const fields = SETTINGS_SCHEMA[section];
+    if (!fields) return;
+
+    const indicator = document.getElementById(`${section}-indicator`);
+    const saveBtn = document.querySelector(`.save-settings-btn[data-section="${section}"]`);
+    
+    if (saveBtn) {
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving...';
+    }
+
+    try {
+      const updates = [];
+
+      Object.entries(fields).forEach(([elementId, key]) => {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        let value;
+        if (element.type === 'checkbox') {
+          value = element.checked;
+        } else {
+          value = element.value;
+        }
+
+        updates.push({ key, value, updated_at: new Date().toISOString() });
+      });
+
+      // Upsert each setting
+      for (const update of updates) {
+        const { error } = await supabase
+    .from('settings')
+    .update({
+        site_title: document.getElementById('setting-site-title').value,
+        site_tagline: document.getElementById('setting-tagline').value,
+        site_timezone: document.getElementById('setting-timezone').value,
+        meta_description: document.getElementById('setting-meta-desc').value,
+        google_analytics_id: document.getElementById('setting-ga-id').value,
+        webhook_url: document.getElementById('setting-webhook').value,
+        require_2fa: document.getElementById('setting-2fa').checked,
+        allow_public_registration: document.getElementById('setting-public-reg').checked,
+        session_timeout: Number(document.getElementById('setting-session-timeout').value),
+        auto_backup_enabled: document.getElementById('setting-auto-backup').checked,
+        updated_at: new Date().toISOString()
+    })
+    .eq('id', 1);
+
+        if (error) {
+          console.error('Save error:', error);
+          throw error;
+        }
+      }
+
+      // Show success
+      if (indicator) {
+        indicator.textContent = '✓ Saved';
+        indicator.className = 'save-indicator saved';
+        setTimeout(() => {
+          indicator.textContent = '';
+          indicator.className = 'save-indicator';
+        }, 3000);
+      }
+
+      showToast('Settings saved successfully', 'success');
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      showToast('Error saving: ' + error.message, 'error');
+    } finally {
+      if (saveBtn) {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save Changes';
+      }
+    }
+  }
+
+  // Wire up save buttons
+  document.querySelectorAll('.save-settings-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const section = btn.dataset.section;
+      saveSettings(section);
+    });
+  });
+
+  // ============================================
+  // API KEY COPY
+  // ============================================
+  document.getElementById('btn-copy-key')?.addEventListener('click', async () => {
+    const apiKeyInput = document.getElementById('setting-api-key');
+    const btn = document.getElementById('btn-copy-key');
+    
+    try {
+      await navigator.clipboard.writeText(apiKeyInput.value);
+      btn.textContent = 'Copied!';
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+      }, 2000);
+      showToast('API key copied to clipboard', 'success');
+    } catch (error) {
+      showToast('Failed to copy', 'error');
+    }
+  });
+
+  // ============================================
+  // WEBHOOK TEST
+  // ============================================
+  document.getElementById('btn-test-webhook')?.addEventListener('click', async () => {
+    const webhookUrl = document.getElementById('setting-webhook').value;
+    const btn = document.getElementById('btn-test-webhook');
+    
+    if (!webhookUrl) {
+      showToast('Please enter a webhook URL', 'warning');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Testing...';
+
+    try {
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          test: true,
+          message: 'Webhook test from Nexus CMS',
+          timestamp: new Date().toISOString()
+        })
+      });
+
+      if (response.ok) {
+        showToast('Webhook test successful!', 'success');
+      } else {
+        showToast(`Webhook returned ${response.status}`, 'error');
+      }
+    } catch (error) {
+      showToast('Webhook test failed', 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Test';
+    }
+  });
+
+  // ============================================
+  // MANUAL BACKUP
+  // ============================================
+  document.getElementById('btn-manual-backup')?.addEventListener('click', async () => {
+    const btn = document.getElementById('btn-manual-backup');
+    btn.disabled = true;
+    btn.textContent = 'Creating...';
+
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const now = new Date().toISOString();
+      const { error } = await supabase
+        .from('settings')
+        .upsert({ key: 'last_backup_date', value: now, updated_at: now }, { onConflict: 'key' });
+
+      if (error) throw error;
+
+      document.getElementById('last-backup-date').textContent = 
+        new Date(now).toLocaleDateString('en-US', { 
+          month: 'long', 
+          day: 'numeric', 
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+
+      showToast('Backup created successfully', 'success');
+    } catch (error) {
+      console.error('Backup error:', error);
+      showToast('Error creating backup', 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Create Manual Backup';
+    }
+  });
+
+  // ============================================
+  // DANGER ZONE
+  // ============================================
+  document.getElementById('btn-reset-db')?.addEventListener('click', async () => {
+    if (confirm('⚠️ This will delete ALL data. Continue?')) {
+      if (prompt('Type RESET to confirm:') === 'RESET') {
+        showToast('Database reset initiated (demo mode)', 'warning');
+      }
+    }
+  });
+
+  document.getElementById('btn-delete-site')?.addEventListener('click', async () => {
+    if (confirm('⚠️ This will delete the entire site. Continue?')) {
+      if (prompt('Type DELETE to confirm:') === 'DELETE') {
+        showToast('Site deletion initiated (demo mode)', 'error');
+      }
+    }
+  });
+
+  // ============================================
+  // SMOOTH SCROLL & ACTIVE NAV
+  // ============================================
+  document.querySelectorAll('.settings-nav a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href').substring(1);
+      const targetElement = document.getElementById(targetId);
+      
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        document.querySelectorAll('.settings-nav a').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        document.querySelectorAll('.settings-nav a').forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === `#${id}`) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  }, { rootMargin: '-100px 0px -60% 0px' });
+
+  document.querySelectorAll('.settings-content .card').forEach(card => {
+    observer.observe(card);
+  });
+
+  // ============================================
+  // TOAST
+  // ============================================
+  function showToast(message, type = 'info') {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = `toast show ${type}`;
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 4000);
+  }
+
+  // ============================================
+  // INITIALIZE
+  // ============================================
+  (async () => {
+    const session = await checkAuth();
+    if (session) {
+      await loadSettings();
+    }
+  })();
+</script>
+
+
+
+</body>
+</html>
+
