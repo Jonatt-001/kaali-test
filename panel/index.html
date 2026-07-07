@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CMS Dashboard | KAALI CMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  
+  <!-- Chart.js for Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  
+  <link rel="stylesheet" href="./style.css" />
+  
+  <style>
+    /* ===== ENHANCED DASHBOARD STYLES ===== */
+    .smart-insight {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.05) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      margin-bottom: var(--space-6);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-4);
+    }
+
+    .smart-insight-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .smart-insight-content {
+      flex: 1;
+    }
+
+    .smart-insight-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: var(--space-1);
+      color: var(--text-primary);
+    }
+
+    .smart-insight-description {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .smart-insight-action {
+      margin-top: var(--space-3);
+    }
+
+    .smart-insight-action .btn {
+      font-size: 0.8rem;
+      padding: 6px 12px;
+    }
+
+    /* Quick Stats with Trends */
+    .stat-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .stat-card:hover::before {
+      opacity: 1;
+    }
+
+    .stat-trend {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: var(--space-2);
+    }
+
+    .stat-trend.positive {
+      color: var(--success);
+    }
+
+    .stat-trend.negative {
+      color: var(--danger);
+    }
+
+    .stat-trend.neutral {
+      color: var(--text-tertiary);
+    }
+
+    /* Activity Timeline */
+    .activity-item {
+      display: flex;
+      gap: var(--space-4);
+      padding: var(--space-4) 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      margin-top: 6px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .activity-dot::after {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: calc(100% + var(--space-4));
+      background: var(--border);
+    }
+
+    .activity-item:last-child .activity-dot::after {
+      display: none;
+    }
+
+    .activity-content {
+      flex: 1;
+    }
+
+    .activity-content p {
+      font-size: 0.875rem;
+      color: var(--text-primary);
+      margin: 0 0 var(--space-1) 0;
+      line-height: 1.5;
+    }
+
+    .activity-content span {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+    }
+
+    /* Health Status Indicators */
+    .health-indicator {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      background: var(--surface-secondary);
+      transition: all 0.2s;
+    }
+
+    .health-indicator:hover {
+      background: var(--surface-tertiary);
+    }
+
+    .health-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: pulse 2s infinite;
+    }
+
+    .health-dot.healthy {
+      background: var(--success);
+    }
+
+    .health-dot.warning {
+      background: var(--warning);
+    }
+
+    .health-dot.critical {
+      background: var(--danger);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Performance Metrics */
+    .metric-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-3);
+    }
+
+    .metric-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      min-width: 120px;
+    }
+
+    .metric-value {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      min-width: 60px;
+      text-align: right;
+    }
+
+    .metric-bar-fill {
+      flex: 1;
+      height: 8px;
+      background: var(--surface-tertiary);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .metric-bar-progress {
+      height: 100%;
+      border-radius: var(--radius-sm);
+      transition: width 0.5s ease;
+    }
+
+    .metric-bar-progress.excellent {
+      background: var(--success);
+    }
+
+    .metric-bar-progress.good {
+      background: var(--primary);
+    }
+
+    .metric-bar-progress.warning {
+      background: var(--warning);
+    }
+
+    .metric-bar-progress.critical {
+      background: var(--danger);
+    }
+
+    /* Notification Badge */
+    .notification-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--danger);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--surface);
+    }
+
+    /* Loading Skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface-secondary) 25%, var(--surface-tertiary) 50%, var(--surface-secondary) 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+      border-radius: var(--radius-md);
+    }
+
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-8);
+      color: var(--text-tertiary);
+    }
+
+    .empty-state svg {
+      width: 64px;
+      height: 64px;
+      margin-bottom: var(--space-4);
+      opacity: 0.3;
+    }
+
+    .empty-state p {
+      font-size: 0.875rem;
+      margin: 0;
+    }
+
+    /* Toast Notifications */
+    .toast {
+      position: fixed;
+      bottom: var(--space-6);
+      right: var(--space-6);
+      background: var(--text-primary);
+      color: white;
+      padding: var(--space-4) var(--space-6);
+      border-radius: var(--radius-lg);
+      font-size: 0.875rem;
+      font-weight: 500;
+      box-shadow: var(--shadow-xl);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s;
+      z-index: 10000;
+      max-width: 400px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast.success {
+      background: var(--success);
+    }
+
+    .toast.error {
+      background: var(--danger);
+    }
+
+    .toast.warning {
+      background: var(--warning);
+    }
+
+    /* Quick Action Hover Effects */
+    .btn {
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Chart Container */
+    .chart-container {
+      position: relative;
+      height: 250px;
+      width: 100%;
+    }
+
+    /* Responsive Improvements */
+    @media (max-width: 768px) {
+      .smart-insight {
+        flex-direction: column;
+      }
+
+      .metric-label {
+        min-width: 100px;
+      }
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--surface-secondary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-tertiary);
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        Nexus CMS
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="index.html" class="nav-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          Dashboard
+        </a>
+        <a href="content.html" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+          Content
+        </a>
+        <a href="media.html" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          Media
+        </a>
+        <a href="users.html" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          Users
+        </a>
+        <a href="settings.html" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          Settings
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar" id="user-avatar">JD</div>
+          <div>
+            <p class="text-sm font-semibold" id="user-name">John Doe</p>
+            <p class="text-xs text-tertiary" id="user-email">john@nexus.com</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN WRAPPER -->
+    <main class="main-wrapper">
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="global-search" placeholder="Search content, users, settings..." />
+        </div>
+        
+        <div class="topbar-actions">
+          <button class="icon-btn" id="notifications-btn" title="Notifications" style="position: relative;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notification-badge" id="notification-count" style="display: none;">0</span>
+          </button>
+          <button class="btn btn-primary" id="auth-btn">Sign Out</button>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <section class="content">
+        <!-- WELCOME -->
+        <div class="page-header">
+          <p class="tag"><span></span>CMS Dashboard</p>
+          <h1>Welcome back, <em id="header-name">Admin</em></h1>
+          <p class="text-secondary">Manage your content, monitor site health, and track analytics.</p>
+        </div>
+
+        <!-- SMART INSIGHTS -->
+        <div id="smart-insights-container"></div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="card" style="margin-bottom: var(--space-6);">
+          <div class="card-header">
+            <h3>Quick Actions</h3>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: var(--space-3);">
+            <button class="btn btn-primary" id="btn-new-post">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              New Post
+            </button>
+            <button class="btn btn-secondary" id="btn-new-page">New Page</button>
+            <button class="btn btn-secondary" id="btn-manage-media">Manage Media</button>
+            <button class="btn btn-secondary" id="btn-manage-users">Manage Users</button>
+            <button class="btn btn-secondary" id="btn-view-analytics">View Analytics</button>
+          </div>
+        </div>
+
+        <!-- OVERVIEW CARDS -->
+        <div class="stats-grid" style="margin-bottom: var(--space-6);">
+          <div class="card stat-card" id="stat-pages">
+            <span class="stat-label">Total Pages</span>
+            <span class="stat-value">--</span>
+            <div class="stat-trend positive">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+              <span>+2 this week</span>
+            </div>
+          </div>
+          <div class="card stat-card" id="stat-posts">
+            <span class="stat-label">Published Posts</span>
+            <span class="stat-value">--</span>
+            <div class="stat-trend positive">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+              <span>+12 this week</span>
+            </div>
+          </div>
+          <div class="card stat-card" id="stat-users">
+            <span class="stat-label">Registered Users</span>
+            <span class="stat-value">--</span>
+            <div class="stat-trend positive">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+              <span>+45 this month</span>
+            </div>
+          </div>
+          <div class="card stat-card" id="stat-visitors">
+            <span class="stat-label">Monthly Visitors</span>
+            <span class="stat-value">--</span>
+            <div class="stat-trend negative">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>
+              <span>-2.1% from last month</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ANALYTICS CHART & WEBSITE HEALTH -->
+        <div style="display: flex; flex-wrap: wrap; gap: var(--space-6); margin-bottom: var(--space-6);">
+          <div class="card" style="flex: 2 1 400px;">
+            <div class="card-header">
+              <h3>Analytics Overview</h3>
+              <select class="btn btn-secondary" id="chart-period" style="padding: 6px 12px; font-size: 0.8rem;">
+                <option value="7">Last 7 Days</option>
+                <option value="30">Last 30 Days</option>
+                <option value="90">Last 90 Days</option>
+              </select>
+            </div>
+            <div class="chart-container">
+              <canvas id="analytics-chart"></canvas>
+            </div>
+          </div>
+          <div class="card" style="flex: 1 1 250px;">
+            <div class="card-header">
+              <h3>Website Health</h3>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+              <div class="health-indicator">
+                <div class="health-dot healthy"></div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="text-sm font-medium">Uptime</span>
+                    <span class="badge badge-success" id="health-uptime">99.9%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="health-indicator">
+                <div class="health-dot healthy"></div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="text-sm font-medium">Response Time</span>
+                    <span class="text-sm font-semibold" id="health-response">124ms</span>
+                  </div>
+                </div>
+              </div>
+              <div class="health-indicator">
+                <div class="health-dot healthy"></div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="text-sm font-medium">SSL Certificate</span>
+                    <span class="badge badge-success">Valid</span>
+                  </div>
+                </div>
+              </div>
+              <div class="health-indicator">
+                <div class="health-dot healthy" id="health-db-dot"></div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="text-sm font-medium">Database</span>
+                    <span class="badge badge-success" id="health-db-status">Connected</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECENT CONTENT & ACTIVITY -->
+        <div style="display: flex; flex-wrap: wrap; gap: var(--space-6); margin-bottom: var(--space-6);">
+          <div class="card" style="flex: 1 1 300px;">
+            <div class="card-header">
+              <h3>Recent Content</h3>
+              <a href="content.html" class="btn btn-secondary" style="font-size: 0.8rem; padding: 6px 12px;">View All</a>
+            </div>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-content-body">
+                  <tr><td colspan="3" class="skeleton" style="height: 40px;"></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card" style="flex: 1 1 300px;">
+            <div class="card-header">
+              <h3>Recent Activity</h3>
+            </div>
+            <div class="activity-list" id="activity-list">
+              <div class="skeleton" style="height: 60px; margin-bottom: var(--space-3);"></div>
+              <div class="skeleton" style="height: 60px; margin-bottom: var(--space-3);"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTIFICATIONS & PROJECTS -->
+        <div style="display: flex; flex-wrap: wrap; gap: var(--space-6); margin-bottom: var(--space-6);">
+          <div class="card" style="flex: 1 1 250px;">
+            <div class="card-header">
+              <h3>Notifications</h3>
+            </div>
+            <div class="activity-list" id="notifications-list">
+              <div class="skeleton" style="height: 60px; margin-bottom: var(--space-3);"></div>
+            </div>
+          </div>
+          <div class="card" style="flex: 2 1 400px;">
+            <div class="card-header">
+              <h3>Recent Projects</h3>
+              <a href="projects.html" class="btn btn-secondary" style="font-size: 0.8rem; padding: 6px 12px;">View All</a>
+            </div>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Project</th>
+                    <th>Status</th>
+                    <th>Due Date</th>
+                  </tr>
+                </thead>
+                <tbody id="projects-table-body">
+                  <tr><td colspan="3" class="skeleton" style="height: 40px;"></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- STORAGE, PERFORMANCE, SCHEDULED TASKS -->
+        <div style="display: flex; flex-wrap: wrap; gap: var(--space-6); margin-bottom: var(--space-6);">
+          <div class="card" style="flex: 1 1 200px;">
+            <div class="card-header">
+              <h3>Storage</h3>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+              <div style="display: flex; justify-content: space-between;">
+                <span class="text-sm">Used</span>
+                <span class="text-sm font-semibold" id="storage-used">-- GB</span>
+              </div>
+              <div class="progress-bar-container" style="height: 8px;">
+                <div class="progress-bar-fill" id="storage-fill" style="width: 0%;"></div>
+              </div>
+              <p class="text-xs text-tertiary" id="storage-info">Loading...</p>
+            </div>
+          </div>
+          <div class="card" style="flex: 1 1 200px;">
+            <div class="card-header">
+              <h3>Performance</h3>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+              <div class="metric-bar">
+                <span class="metric-label">Page Speed</span>
+                <div class="metric-bar-fill">
+                  <div class="metric-bar-progress excellent" id="perf-speed" style="width: 0%;"></div>
+                </div>
+                <span class="metric-value" id="perf-speed-value">--</span>
+              </div>
+              <div class="metric-bar">
+                <span class="metric-label">CPU Usage</span>
+                <div class="metric-bar-fill">
+                  <div class="metric-bar-progress good" id="perf-cpu" style="width: 0%;"></div>
+                </div>
+                <span class="metric-value" id="perf-cpu-value">--</span>
+              </div>
+              <div class="metric-bar">
+                <span class="metric-label">Memory</span>
+                <div class="metric-bar-fill">
+                  <div class="metric-bar-progress warning" id="perf-memory" style="width: 0%;"></div>
+                </div>
+                <span class="metric-value" id="perf-memory-value">--</span>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="flex: 1 1 200px;">
+            <div class="card-header">
+              <h3>Scheduled Tasks</h3>
+            </div>
+            <div class="activity-list" id="scheduled-tasks-list">
+              <div class="skeleton" style="height: 60px; margin-bottom: var(--space-3);"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SYSTEM LOGS -->
+        <div class="card">
+          <div class="card-header">
+            <h3>System Logs</h3>
+            <button class="btn btn-secondary" id="refresh-logs-btn" style="font-size: 0.8rem; padding: 6px 12px;">Refresh</button>
+          </div>
+          <div style="background: var(--surface-secondary); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-4); max-height: 250px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 0.8rem;" id="system-logs-body">
+            <p style="color: var(--text-tertiary);">Loading system logs...</p>
+          </div>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    // --- 1. SUPABASE CONFIG ---
+    const supabaseUrl = 'https://umzpdqsjrthzxjdjfdej.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtenBkcXNqcnRoenhqZGpmZGVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxOTkzNDUsImV4cCI6MjA5ODc3NTM0NX0.WL5o3fEwdlmE03zarFEv-PvQjedCklSqVcKR_ButMCE';
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true
+  }
+});
+
+    // --- 2. DOM ELEMENTS ---
+    const userNameEl = document.getElementById('user-name');
+    const userEmailEl = document.getElementById('user-email');
+    const userAvatarEl = document.getElementById('user-avatar');
+    const headerNameEl = document.getElementById('header-name');
+    const authBtn = document.getElementById('auth-btn');
+    const globalSearch = document.getElementById('global-search');
+    const notificationsBtn = document.getElementById('notifications-btn');
+    const notificationCount = document.getElementById('notification-count');
+
+
+
+// ==========================================================
+// SIGN OUT
+// ==========================================================
+
+authBtn?.addEventListener("click", async () => {
+
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    console.error(error);
+    showToast("Unable to sign out.", "error");
+    return;
+  }
+
+  window.location.replace("login.html");
+
+});
+
+// ==========================================================
+// START APP
+// ==========================================================
+
+(async () => {
+
+  const session = await requireAuth();
+
+  if (!session) return;
+
+  await updateAuthUI(session);
+
+  await fetchAllDashboardData();
+
+})();
+
+    // --- 3. AUTH LOGIC ---
+    async function updateAuthUI(session) {
+      if (session) {
+        const user = session.user;
+        const name = user.user_metadata?.full_name || user.email.split('@')[0];
+        const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        
+        if(userNameEl) userNameEl.textContent = name;
+        if(userEmailEl) userEmailEl.textContent = user.email;
+        if(userAvatarEl) userAvatarEl.textContent = initials;
+        if(headerNameEl) headerNameEl.textContent = name.split(' ')[0];
+        if(authBtn) authBtn.textContent = 'Sign Out';
+      } else {
+        if(userNameEl) userNameEl.textContent = 'Guest';
+        if(userAvatarEl) userAvatarEl.textContent = 'GU';
+        if(authBtn) authBtn.textContent = 'Sign In';
+      }
+    }
+
+    if(authBtn) {
+      authBtn.addEventListener('click', async () => {
+        if (authBtn.textContent === 'Sign Out') {
+          await supabase.auth.signOut();
+          showToast('Signed out successfully', 'success');
+        }
+      });
+    }
+
+    // --- 4. SMART INSIGHTS ENGINE ---
+    async function generateSmartInsights() {
+      const insights = [];
+      const container = document.getElementById('smart-insights-container');
+      if (!container) return;
+
+      try {
+        // Check for draft posts
+        const { data: drafts } = await supabase.from('content').select('id').eq('status', 'draft');
+        if (drafts && drafts.length > 5) {
+          insights.push({
+            icon: '📝',
+            title: 'You have draft posts waiting',
+            description: `You have ${drafts.length} unpublished drafts. Consider reviewing and publishing them to keep your content fresh.`,
+            action: { text: 'Review Drafts', href: 'content.html?status=draft' }
+          });
+        }
+
+        // Check storage usage
+        const { data: mediaFiles } = await supabase.from('media_files').select('size');
+        if (mediaFiles) {
+          const totalSize = mediaFiles.reduce((sum, f) => sum + (f.size || 0), 0);
+          const totalGB = totalSize / (1024 * 1024 * 1024);
+          if (totalGB > 8) {
+            insights.push({
+              icon: '💾',
+              title: 'Storage usage is high',
+              description: `You're using ${totalGB.toFixed(1)} GB of storage. Consider cleaning up unused files or upgrading your plan.`,
+              action: { text: 'Manage Storage', href: 'media.html' }
+            });
+          }
+        }
+
+        // Check for old content
+        const { data: oldContent } = await supabase.from('content').select('id, updated_at').lt('updated_at', new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString());
+        if (oldContent && oldContent.length > 10) {
+          insights.push({
+            icon: '🔄',
+            title: 'Content needs updating',
+            description: `${oldContent.length} posts haven't been updated in over 90 days. Fresh content performs better in search rankings.`,
+            action: { text: 'Update Content', href: 'content.html' }
+          });
+        }
+
+        // Render insights
+        if (insights.length > 0) {
+          container.innerHTML = insights.map(insight => `
+            <div class="smart-insight">
+              <div class="smart-insight-icon">${insight.icon}</div>
+              <div class="smart-insight-content">
+                <div class="smart-insight-title">${insight.title}</div>
+                <div class="smart-insight-description">${insight.description}</div>
+                ${insight.action ? `
+                  <div class="smart-insight-action">
+                    <a href="${insight.action.href}" class="btn btn-primary">${insight.action.text}</a>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          `).join('');
+        }
+      } catch (error) {
+        console.warn('Error generating insights:', error);
+      }
+    }
+
+    // --- 5. ANALYTICS CHART ---
+    let analyticsChart = null;
+
+    async function loadAnalyticsChart(days = 7) {
+      const ctx = document.getElementById('analytics-chart');
+      if (!ctx) return;
+
+      try {
+        // Generate mock data for now (replace with real analytics)
+        const labels = [];
+        const pageViews = [];
+        const uniqueVisitors = [];
+
+        for (let i = days - 1; i >= 0; i--) {
+          const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
+          labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+          pageViews.push(Math.floor(Math.random() * 500) + 200);
+          uniqueVisitors.push(Math.floor(Math.random() * 300) + 100);
+        }
+
+        if (analyticsChart) {
+          analyticsChart.destroy();
+        }
+
+        analyticsChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: 'Page Views',
+                data: pageViews,
+                borderColor: '#6366f1',
+                backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                tension: 0.4,
+                fill: true
+              },
+              {
+                label: 'Unique Visitors',
+                data: uniqueVisitors,
+                borderColor: '#10b981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                tension: 0.4,
+                fill: true
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top',
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: {
+                  color: 'rgba(0, 0, 0, 0.05)'
+                }
+              },
+              x: {
+                grid: {
+                  display: false
+                }
+              }
+            }
+          }
+        });
+      } catch (error) {
+        console.error('Chart error:', error);
+      }
+    }
+
+    // Chart period selector
+    document.getElementById('chart-period')?.addEventListener('change', (e) => {
+      loadAnalyticsChart(parseInt(e.target.value));
+    });
+
+    // --- 6. PERFORMANCE MONITORING ---
+    async function updatePerformanceMetrics() {
+      // Simulate performance metrics (replace with real monitoring)
+      const metrics = {
+        speed: Math.floor(Math.random() * 2) + 1, // 1-2s
+        cpu: Math.floor(Math.random() * 30) + 10, // 10-40%
+        memory: Math.floor(Math.random() * 40) + 30 // 30-70%
+      };
+
+      // Update UI
+      document.getElementById('perf-speed-value').textContent = `${metrics.speed}s`;
+      document.getElementById('perf-speed').style.width = `${100 - (metrics.speed * 20)}%`;
+
+      document.getElementById('perf-cpu-value').textContent = `${metrics.cpu}%`;
+      document.getElementById('perf-cpu').style.width = `${metrics.cpu}%`;
+      document.getElementById('perf-cpu').className = `metric-bar-progress ${metrics.cpu < 50 ? 'excellent' : metrics.cpu < 70 ? 'good' : 'warning'}`;
+
+      document.getElementById('perf-memory-value').textContent = `${metrics.memory}%`;
+      document.getElementById('perf-memory').style.width = `${metrics.memory}%`;
+      document.getElementById('perf-memory').className = `metric-bar-progress ${metrics.memory < 50 ? 'excellent' : metrics.memory < 70 ? 'good' : 'warning'}`;
+    }
+
+    // --- 7. WEBSITE HEALTH CHECK ---
+    async function checkWebsiteHealth() {
+      try {
+        // Check database connection
+        const { error } = await supabase.from('content').select('id').limit(1);
+        const dbDot = document.getElementById('health-db-dot');
+        const dbStatus = document.getElementById('health-db-status');
+        
+        if (error) {
+          dbDot.className = 'health-dot critical';
+          dbStatus.textContent = 'Disconnected';
+          dbStatus.className = 'badge badge-danger';
+        } else {
+          dbDot.className = 'health-dot healthy';
+          dbStatus.textContent = 'Connected';
+          dbStatus.className = 'badge badge-success';
+        }
+
+        // Simulate other health metrics
+        document.getElementById('health-response').textContent = `${Math.floor(Math.random() * 100) + 100}ms`;
+      } catch (error) {
+        console.error('Health check error:', error);
+      }
+    }
+
+    // --- 8. DATA FETCHING ---
+    async function fetchAllDashboardData() {
+      try {
+        // Fetch stats
+        const [pagesRes, postsRes, usersRes] = await Promise.allSettled([
+          supabase.from('content').select('id', { count: 'exact', head: true }).eq('type', 'page'),
+          supabase.from('content').select('id', { count: 'exact', head: true }).eq('status', 'published'),
+          supabase.auth.admin.listUsers()
+        ]);
+
+        if (pagesRes.status === 'fulfilled' && !pagesRes.value.error) {
+          updateStat('stat-pages', pagesRes.value.count || 0);
+        }
+        if (postsRes.status === 'fulfilled' && !postsRes.value.error) {
+          updateStat('stat-posts', postsRes.value.count || 0);
+        }
+        if (usersRes.status === 'fulfilled' && usersRes.value.data) {
+          updateStat('stat-users', usersRes.value.data.users?.length || 0);
+        }
+
+        // Fetch storage
+        const { data: mediaFiles } = await supabase.from('media_files').select('size');
+        if (mediaFiles) {
+          const totalSize = mediaFiles.reduce((sum, f) => sum + (f.size || 0), 0);
+          const totalGB = (totalSize / (1024 * 1024 * 1024)).toFixed(1);
+          const limit = 10;
+          const pct = Math.round((totalGB / limit) * 100);
+          
+          document.getElementById('storage-used').textContent = `${totalGB} GB`;
+          document.getElementById('storage-fill').style.width = `${pct}%`;
+          document.getElementById('storage-info').textContent = `${totalGB} GB of ${limit} GB used`;
+        }
+
+        // Fetch lists
+        await Promise.all([
+          fetchRecentContent(),
+          fetchActivities(),
+          fetchNotifications(),
+          fetchProjects(),
+          fetchScheduledTasks(),
+          fetchSystemLogs()
+        ]);
+
+        // Generate insights
+        await generateSmartInsights();
+
+        // Load chart
+        await loadAnalyticsChart(7);
+
+        // Update performance
+        await updatePerformanceMetrics();
+
+        // Check health
+        await checkWebsiteHealth();
+
+      } catch (error) {
+        console.warn('Dashboard fetch error, loading mock data:', error);
+        loadMockData();
+      }
+    }
+
+    async function fetchRecentContent() {
+      const { data, error } = await supabase.from('content').select('title, type, status').order('updated_at', { ascending: false }).limit(5);
+      renderRecentContent(error ? [] : data || []);
+    }
+
+    async function fetchActivities() {
+      const { data, error } = await supabase.from('activity_logs').select('*').order('created_at', { ascending: false }).limit(5);
+      renderActivityList('activity-list', error ? [] : data || []);
+    }
+
+    async function fetchNotifications() {
+      const { data, error } = await supabase.from('notifications').select('*').order('created_at', { ascending: false }).limit(5);
+      const notifications = error ? [] : data || [];
+      renderActivityList('notifications-list', notifications);
+      
+      // Update notification badge
+      const unreadCount = notifications.filter(n => !n.read).length;
+      if (unreadCount > 0) {
+        notificationCount.textContent = unreadCount;
+        notificationCount.style.display = 'flex';
+      }
+    }
+
+    async function fetchProjects() {
+      const { data, error } = await supabase.from('projects').select('*').order('created_at', { ascending: false }).limit(5);
+      renderProjectsTable(error ? [] : data || []);
+    }
+
+    async function fetchScheduledTasks() {
+      const { data, error } = await supabase.from('scheduled_tasks').select('*').order('next_run', { ascending: true }).limit(5);
+      renderActivityList('scheduled-tasks-list', error ? [] : data || []);
+    }
+
+    async function fetchSystemLogs() {
+      const { data, error } = await supabase.from('system_logs').select('*').order('created_at', { ascending: false }).limit(20);
+      renderSystemLogs(error ? [] : data || []);
+    }
+
+    // --- 9. RENDER FUNCTIONS ---
+    function updateStat(id, value) {
+      const el = document.querySelector(`#${id} .stat-value`);
+      if (el) el.textContent = value.toLocaleString();
+    }
+
+    function renderRecentContent(items) {
+      const tbody = document.getElementById('recent-content-body');
+      if (!tbody) return;
+      if (!items.length) {
+        tbody.innerHTML = '<tr><td colspan="3" class="empty-state"><p>No recent content.</p></td></tr>';
+        return;
+      }
+      tbody.innerHTML = items.map(item => `
+        <tr>
+          <td class="font-semibold">${item.title || 'Untitled'}</td>
+          <td><span class="badge badge-neutral">${item.type || 'Post'}</span></td>
+          <td><span class="badge ${getBadgeClass(item.status)}">${item.status || 'Draft'}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    function renderActivityList(containerId, items) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      if (!items.length) {
+        container.innerHTML = '<p class="text-secondary text-sm">No items to show.</p>';
+        return;
+      }
+      container.innerHTML = items.map(item => `
+        <div class="activity-item">
+          <div class="activity-dot"></div>
+          <div class="activity-content">
+            <p>${item.description || item.title || item.task_name || 'Activity'}</p>
+            <span>${formatTimeAgo(item.created_at || item.next_run)}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderProjectsTable(projects) {
+      const tbody = document.getElementById('projects-table-body');
+      if (!tbody) return;
+      if (!projects.length) {
+        tbody.innerHTML = '<tr><td colspan="3" class="empty-state"><p>No active projects.</p></td></tr>';
+        return;
+      }
+      tbody.innerHTML = projects.map(p => `
+        <tr>
+          <td class="font-semibold">${p.name || 'Project'}</td>
+          <td><span class="badge ${getBadgeClass(p.status)}">${p.status || 'Pending'}</span></td>
+          <td class="text-secondary">${formatDate(p.due_date)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderSystemLogs(logs) {
+      const container = document.getElementById('system-logs-body');
+      if (!container) return;
+      if (!logs.length) {
+        container.innerHTML = '<p style="color: var(--text-tertiary);">No system logs available.</p>';
+        return;
+      }
+      container.innerHTML = logs.map(log => `
+        <div style="margin-bottom: 4px; border-bottom: 1px solid var(--border); padding-bottom: 4px;">
+          <span style="color: var(--text-tertiary);">[${new Date(log.created_at).toLocaleTimeString()}]</span>
+          <span style="color: ${log.level === 'ERROR' ? 'var(--danger)' : log.level === 'WARN' ? 'var(--warning)' : 'var(--text-secondary)'}; font-weight: 600;">${log.level || 'INFO'}</span>
+          ${log.message || 'Log entry'}
+        </div>
+      `).join('');
+    }
+
+    // --- 10. QUICK ACTIONS ---
+    document.getElementById('btn-new-post')?.addEventListener('click', () => {
+      window.location.href = 'editor.html?type=post';
+    });
+
+    document.getElementById('btn-new-page')?.addEventListener('click', () => {
+      window.location.href = 'editor.html?type=page';
+    });
+
+    document.getElementById('btn-manage-media')?.addEventListener('click', () => {
+      window.location.href = 'media.html';
+    });
+
+    document.getElementById('btn-manage-users')?.addEventListener('click', () => {
+      window.location.href = 'users.html';
+    });
+
+    document.getElementById('btn-view-analytics')?.addEventListener('click', () => {
+      showToast('Analytics dashboard coming soon!', 'info');
+    });
+
+    // Refresh logs button
+    document.getElementById('refresh-logs-btn')?.addEventListener('click', async (e) => {
+      const btn = e.target;
+      btn.textContent = 'Refreshing...';
+      btn.disabled = true;
+      await fetchSystemLogs();
+      btn.textContent = 'Refresh';
+      btn.disabled = false;
+      showToast('Logs refreshed', 'success');
+    });
+
+    // Global search
+    globalSearch?.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      if (query.length > 2) {
+        showToast(`Searching for "${query}"...`, 'info');
+      }
+    });
+
+    // Notifications button
+    notificationsBtn?.addEventListener('click', () => {
+      showToast('Notifications panel coming soon!', 'info');
+    });
+
+    // --- 11. AUTO-REFRESH ---
+    // Refresh data every 5 minutes
+    setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        fetchAllDashboardData();
+      }
+    }, 5 * 60 * 1000);
+
+    // --- 12. MOCK DATA FALLBACK ---
+    function loadMockData() {
+      updateStat('stat-pages', 24);
+      updateStat('stat-posts', 142);
+      updateStat('stat-users', 1204);
+      updateStat('stat-visitors', 18500);
+
+      document.getElementById('storage-used').textContent = '4.2 GB';
+      document.getElementById('storage-fill').style.width = '42%';
+      document.getElementById('storage-info').textContent = '4.2 GB of 10 GB used';
+
+      renderRecentContent([
+        { title: 'Getting Started with Nexus CMS', type: 'Guide', status: 'Published' },
+        { title: 'Top 10 Design Trends for 2026', type: 'Blog', status: 'Draft' },
+        { title: 'Product Update: v2.0', type: 'Page', status: 'Published' }
+      ]);
+
+      renderActivityList('activity-list', [
+        { description: 'Alice published a new post', created_at: new Date().toISOString() },
+        { description: 'Bob updated the homepage', created_at: new Date(Date.now() - 3600000).toISOString() }
+      ]);
+
+      renderActivityList('notifications-list', [
+        { description: 'New user registration: charlie@example.com', created_at: new Date().toISOString() },
+        { description: 'Storage usage reached 80%', created_at: new Date(Date.now() - 7200000).toISOString() }
+      ]);
+
+      renderProjectsTable([
+        { name: 'Website Redesign', status: 'In Progress', due_date: '2026-08-15' },
+        { name: 'Mobile App v2', status: 'Completed', due_date: '2026-06-01' }
+      ]);
+
+      renderActivityList('scheduled-tasks-list', [
+        { task_name: 'Database Backup', next_run: new Date(Date.now() + 3600000).toISOString() },
+        { task_name: 'Clear Cache', next_run: new Date(Date.now() + 86400000).toISOString() }
+      ]);
+
+      renderSystemLogs([
+        { level: 'INFO', message: 'Server started successfully', created_at: new Date().toISOString() },
+        { level: 'WARN', message: 'High memory usage detected', created_at: new Date(Date.now() - 1800000).toISOString() }
+      ]);
+
+      loadAnalyticsChart(7);
+      updatePerformanceMetrics();
+      checkWebsiteHealth();
+    }
+
+    // --- 13. UTILITIES ---
+    function getBadgeClass(status) {
+      const map = { 
+        'Completed': 'badge-success', 
+        'In Progress': 'badge-warning', 
+        'Pending': 'badge-neutral', 
+        'Published': 'badge-success', 
+        'Draft': 'badge-neutral',
+        'Scheduled': 'badge-info'
+      };
+      return map[status] || 'badge-neutral';
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return 'N/A';
+      return new Date(dateString).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function formatTimeAgo(dateString) {
+      if (!dateString) return 'N/A';
+      const seconds = Math.floor((new Date() - new Date(dateString)) / 1000);
+      let interval = seconds / 3600;
+      if (interval > 24) return Math.floor(interval / 24) + " days ago";
+      if (interval > 1) return Math.floor(interval) + " hours ago";
+      interval = seconds / 60;
+      if (interval > 1) return Math.floor(interval) + " minutes ago";
+      return "Just now";
+    }
+
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // --- INIT ---
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      updateAuthUI(session);
+      if (session) {
+        fetchAllDashboardData();
+      } else {
+        loadMockData();
+      }
+    });
+  </script>
+</body>
+</html>
+
