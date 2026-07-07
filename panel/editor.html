@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editor | DIM (de image magazine)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet" />
+  
+  <!-- TinyMCE Rich Text Editor (Professional Grade) -->
+  <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js" referrerpolicy="origin"></script>
+  
+  <!-- Flatpickr for scheduling -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --primary-light: #818cf8;
+      --success: #10b981;
+      --success-dark: #059669;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text-primary: #09090b;
+      --text-secondary: #52525b;
+      --text-tertiary: #a1a1aa;
+      --surface: #ffffff;
+      --surface-secondary: #f4f4f5;
+      --surface-tertiary: #e4e4e7;
+      --border: #e4e4e7;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-10: 40px;
+      --space-12: 48px;
+      --font-heading: 'Syne', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-serif: 'Merriweather', serif;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--surface);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Top Bar */
+    .editor-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: var(--space-4) var(--space-6);
+    }
+
+    .editor-header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-6);
+    }
+
+    .editor-nav { display: flex; align-items: center; gap: var(--space-4); }
+
+    .back-btn {
+      display: flex; align-items: center; gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      border: none; background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.875rem; font-weight: 500;
+      cursor: pointer; border-radius: var(--radius-md);
+      transition: all 0.2s;
+    }
+
+    .back-btn:hover { background: var(--surface-secondary); color: var(--text-primary); }
+
+    .title-input {
+      font-family: var(--font-heading);
+      font-size: 1.5rem; font-weight: 700;
+      border: none; background: transparent;
+      color: var(--text-primary);
+      width: 300px; padding: var(--space-2) 0;
+    }
+
+    .title-input:focus { outline: none; border-bottom: 2px solid var(--primary); }
+    .title-input::placeholder { color: var(--text-tertiary); }
+
+    .editor-controls { display: flex; align-items: center; gap: var(--space-3); }
+
+    .status-select, .preview-btn {
+      padding: var(--space-2) var(--space-4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      font-size: 0.875rem; font-weight: 500;
+      color: var(--text-primary);
+      cursor: pointer; transition: all 0.2s;
+    }
+
+    .preview-btn:hover { background: var(--surface-secondary); }
+
+    /* Publishing Buttons */
+    .draft-btn {
+      padding: var(--space-2) var(--space-5);
+      border: 1px solid var(--border); border-radius: var(--radius-md);
+      background: var(--surface); color: var(--text-primary);
+      font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; gap: var(--space-2);
+    }
+    .draft-btn:hover { background: var(--surface-secondary); transform: translateY(-1px); }
+
+    .publish-btn {
+      padding: var(--space-2) var(--space-5);
+      border: none; border-radius: var(--radius-md);
+      background: var(--success); color: white;
+      font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; gap: var(--space-2);
+    }
+    .publish-btn:hover { background: var(--success-dark); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+    /* Main Layout */
+    .editor-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: var(--space-8);
+      padding: var(--space-8) var(--space-6);
+      min-height: calc(100vh - 73px);
+    }
+
+    .editor-main { min-width: 0; }
+
+    .editor-canvas {
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    /* TinyMCE Customization */
+    .tox-tinymce {
+      border: none !important;
+      border-radius: 0 !important;
+    }
+
+    .tox .tox-toolbar__primary {
+      background: var(--surface-secondary) !important;
+      border-bottom: 1px solid var(--border) !important;
+    }
+
+    .tox .tox-toolbar-overlord {
+      background: var(--surface-secondary) !important;
+    }
+
+    .tox .tox-edit-area__iframe {
+      background: white !important;
+      font-family: var(--font-serif) !important;
+      font-size: 1.125rem !important;
+      line-height: 1.8 !important;
+    }
+
+    .tox .tox-statusbar {
+      background: var(--surface-secondary) !important;
+      border-top: 1px solid var(--border) !important;
+    }
+
+    /* Sidebar */
+    .editor-sidebar {
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+    }
+
+    .sidebar-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      margin-bottom: var(--space-6);
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-5);
+    }
+
+    .sidebar-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+    }
+
+    .form-group { margin-bottom: var(--space-5); }
+    .form-group:last-child { margin-bottom: 0; }
+
+    .form-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: var(--space-2);
+    }
+
+    .form-label .char-counter { font-size: 0.7rem; color: var(--text-tertiary); font-weight: 400; }
+    .form-label .char-counter.warning { color: var(--warning); }
+    .form-label .char-counter.danger { color: var(--danger); }
+    .form-label .char-counter.success { color: var(--success); }
+
+    .form-input {
+      width: 100%;
+      padding: var(--space-3) var(--space-4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      font-family: var(--font-body);
+      transition: all 0.2s;
+      background: var(--surface);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .form-textarea { resize: vertical; min-height: 100px; font-family: var(--font-body); }
+
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2352525b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 40px;
+    }
+
+    /* Auto-generate SEO Button */
+    .auto-seo-btn, .scan-links-btn, .apply-links-btn {
+      width: 100%;
+      padding: 10px 14px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+    }
+
+    .auto-seo-btn:hover, .scan-links-btn:hover, .apply-links-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .scan-links-btn {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+
+    .apply-links-btn {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    }
+
+    .apply-links-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Internal Links Panel */
+    .links-scan-result {
+      background: var(--surface-secondary);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      margin-bottom: var(--space-4);
+      border: 1px solid var(--border);
+    }
+
+    .links-count {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-3);
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .links-count-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      font-family: var(--font-heading);
+    }
+
+    .links-count-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .link-opportunity {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--space-2);
+      transition: all 0.2s;
+    }
+
+    .link-opportunity:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .link-opportunity-checkbox {
+      margin-top: 2px;
+      cursor: pointer;
+    }
+
+    .link-opportunity-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .link-opportunity-text {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .link-opportunity-text code {
+      background: var(--surface-secondary);
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      color: var(--primary);
+    }
+
+    .link-opportunity-target {
+      font-size: 0.7rem;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .links-empty {
+      text-align: center;
+      padding: var(--space-6);
+      color: var(--text-tertiary);
+      font-size: 0.85rem;
+    }
+
+    /* Upload Zone */
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-8) var(--space-6);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--surface-secondary);
+    }
+
+    .upload-zone:hover { border-color: var(--primary); background: rgba(99, 102, 241, 0.02); }
+    .upload-zone.has-image { border-style: solid; border-color: var(--success); background: rgba(16, 185, 129, 0.02); }
+
+    .upload-icon { width: 48px; height: 48px; margin: 0 auto var(--space-4); color: var(--text-tertiary); }
+    .upload-text { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: var(--space-2); }
+    .upload-hint { font-size: 0.75rem; color: var(--text-tertiary); }
+
+    .image-preview { position: relative; border-radius: var(--radius-md); overflow: hidden; margin-top: var(--space-4); }
+    .image-preview img { width: 100%; height: 200px; object-fit: cover; }
+
+    .image-remove {
+      position: absolute; top: var(--space-2); right: var(--space-2);
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(0, 0, 0, 0.7); color: white;
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .image-remove:hover { background: var(--danger); transform: scale(1.1); }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: flex; gap: var(--space-6);
+      padding: var(--space-4) var(--space-6);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-md);
+      margin-top: var(--space-6);
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .stat-item { display: flex; align-items: center; gap: var(--space-2); }
+    .stat-value { font-weight: 600; color: var(--text-primary); }
+
+    /* Tags Input */
+    .tags-input-container {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-2) var(--space-3);
+      display: flex; flex-wrap: wrap; gap: var(--space-2);
+      min-height: 44px; background: var(--surface);
+    }
+
+    .tags-input-container:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .tag {
+      display: inline-flex; align-items: center; gap: var(--space-1);
+      padding: var(--space-1) var(--space-3);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      color: var(--text-primary);
+    }
+
+    .tag-remove { cursor: pointer; opacity: 0.6; transition: opacity 0.2s; }
+    .tag-remove:hover { opacity: 1; }
+
+    .tags-input {
+      border: none; outline: none; flex: 1;
+      min-width: 120px; font-size: 0.875rem;
+      padding: var(--space-1);
+    }
+
+    /* SEO Preview */
+    .seo-preview {
+      background: var(--surface-secondary);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      margin-top: var(--space-3);
+      border: 1px solid var(--border);
+    }
+
+    .seo-preview-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); margin-bottom: var(--space-2); font-weight: 600; }
+    .seo-url { font-size: 0.75rem; color: var(--success); margin-bottom: var(--space-1); font-family: monospace; }
+    .seo-title { font-size: 1.125rem; color: #1a0dab; text-decoration: none; display: block; margin-bottom: var(--space-1); font-weight: 500; line-height: 1.3; }
+    .seo-title:hover { text-decoration: underline; }
+    .seo-description { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; }
+
+    /* SEO Score */
+    .seo-score {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: var(--space-3);
+      background: var(--surface-secondary);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-4);
+    }
+
+    .seo-score-circle {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.875rem;
+      color: white; flex-shrink: 0;
+    }
+
+    .seo-score-circle.poor { background: var(--danger); }
+    .seo-score-circle.fair { background: var(--warning); }
+    .seo-score-circle.good { background: var(--primary); }
+    .seo-score-circle.excellent { background: var(--success); }
+
+    .seo-score-info { flex: 1; }
+    .seo-score-label { font-size: 0.75rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+    .seo-score-text { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
+
+    /* Mobile Menu Toggle */
+    .mobile-sidebar-toggle {
+      display: none;
+      position: fixed;
+      bottom: var(--space-6);
+      right: var(--space-6);
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      box-shadow: var(--shadow-lg);
+      cursor: pointer;
+      z-index: 90;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .editor-container { grid-template-columns: 1fr; }
+
+      .editor-sidebar {
+        position: fixed; top: 0; right: -100%;
+        width: 100%; max-width: 400px;
+        height: 100vh; background: var(--surface);
+        z-index: 200; padding: var(--space-6);
+        overflow-y: auto; transition: right 0.3s ease;
+        box-shadow: var(--shadow-xl);
+      }
+
+      .editor-sidebar.open { right: 0; }
+      .mobile-sidebar-toggle { display: flex; }
+
+      .sidebar-overlay {
+        display: none;
+        position: fixed; inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 150;
+      }
+
+      .sidebar-overlay.open { display: block; }
+      .title-input { width: 200px; font-size: 1.25rem; }
+    }
+
+    @media (max-width: 640px) {
+      .editor-header-content { flex-wrap: wrap; }
+      .title-input { width: 100%; order: 3; margin-top: var(--space-2); }
+      .stats-bar { flex-wrap: wrap; gap: var(--space-4); }
+    }
+
+    /* Toast Notifications */
+    .toast {
+      position: fixed; bottom: var(--space-6); left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--text-primary); color: white;
+      padding: var(--space-3) var(--space-6);
+      border-radius: var(--radius-lg);
+      font-size: 0.875rem; font-weight: 500;
+      box-shadow: var(--shadow-xl);
+      opacity: 0; transition: all 0.3s;
+      z-index: 1000; max-width: 90%;
+      text-align: center;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--danger); }
+
+    *:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      display: none; align-items: center; justify-content: center;
+      z-index: 1000;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-box {
+      background: white; border-radius: 16px; padding: 32px;
+      max-width: 500px; width: 90%; box-shadow: var(--shadow-xl);
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .modal-box h3 { font-family: var(--font-heading); margin-bottom: 8px; font-size: 1.5rem; }
+    .modal-box p { color: var(--text-secondary); margin-bottom: 16px; font-size: 0.9rem; }
+    .validation-list, .progress-list { list-style: none; padding: 0; margin: 16px 0; max-height: 300px; overflow-y: auto; }
+    .validation-list li, .progress-list li {
+      padding: 10px 12px; margin-bottom: 8px; border-radius: 8px;
+      display: flex; align-items: center; gap: 10px; font-size: 0.9rem;
+    }
+    .validation-list li { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .validation-list li.warning { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+    .progress-list li { background: #f4f4f5; color: #52525b; border: 1px solid #e4e4e7; }
+    .progress-list li.success { background: #ecfdf5; color: #065f46; border-color: #a7f3d0; }
+    .progress-list li.saving { background: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
+    .progress-list li.error { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
+    .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; }
+    .btn-primary, .btn-secondary {
+      padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; font-size: 0.9rem; transition: all 0.2s;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: #f4f4f5; color: #52525b; border: 1px solid #e4e4e7; }
+    .btn-secondary:hover { background: #e4e4e7; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="editor-header">
+    <div class="editor-header-content">
+      <div class="editor-nav">
+        <button class="back-btn" onclick="window.location.href='content.html'">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Back
+        </button>
+        <input type="text" class="title-input" id="editor-title" placeholder="Untitled Document" />
+      </div>
+      
+      <div class="editor-controls">
+        <select class="status-select" id="editor-status">
+          <option value="draft">Draft</option>
+          <option value="scheduled">Scheduled</option>
+        </select>
+        
+        <button class="preview-btn" id="preview-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline; vertical-align: middle; margin-right: 6px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Preview
+        </button>
+        
+        <button class="draft-btn" id="save-draft-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1-2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Save Draft
+        </button>
+
+        <button class="publish-btn" id="publish-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+          Publish
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="editor-container">
+    <!-- Main Editor -->
+    <main class="editor-main">
+      <div class="editor-canvas">
+        <textarea id="tinymce-editor"></textarea>
+      </div>
+      
+      <!-- Writing Stats -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span>Words:</span>
+          <span class="stat-value" id="word-count">0</span>
+        </div>
+        <div class="stat-item">
+          <span>Characters:</span>
+          <span class="stat-value" id="char-count">0</span>
+        </div>
+        <div class="stat-item">
+          <span>Reading time:</span>
+          <span class="stat-value" id="reading-time">0 min</span>
+        </div>
+        <div class="stat-item" style="margin-left: auto; color: var(--text-tertiary);">
+          <span id="last-saved">Last saved: Never</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Sidebar -->
+    <aside class="editor-sidebar" id="editor-sidebar">
+      <!-- Publishing Settings -->
+      <div class="sidebar-section">
+        <div class="sidebar-header">
+          <span class="sidebar-title">Publishing</span>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">URL Slug</label>
+          <input type="text" class="form-input" id="editor-slug" placeholder="my-awesome-post" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Content Type</label>
+          <select class="form-input form-select" id="editor-type">
+            <option value="post">Blog Post</option>
+            <option value="page">Static Page</option>
+            <option value="article">Magazine Article</option>
+            <option value="story">Story</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Author</label>
+          <input type="text" class="form-input" id="editor-author" placeholder="Author name" />
+        </div>
+
+        <div class="form-group" id="publish-date-group" style="display: none;">
+          <label class="form-label">Publish Date</label>
+          <input type="text" class="form-input" id="publish-date" placeholder="Select date and time" />
+        </div>
+      </div>
+
+      <!-- INTERNAL LINKING -->
+      <div class="sidebar-section">
+        <div class="sidebar-header">
+          <span class="sidebar-title">🔗 Internal Links</span>
+        </div>
+
+        <button class="scan-links-btn" id="scan-links-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          Scan for Internal Links
+        </button>
+
+        <div id="links-result-container" style="display: none;">
+          <div class="links-scan-result">
+            <div class="links-count">
+              <div>
+                <div class="links-count-number" id="links-count-number">0</div>
+                <div class="links-count-label">Opportunities Found</div>
+              </div>
+            </div>
+            <div id="links-opportunities-list"></div>
+          </div>
+          <button class="apply-links-btn" id="apply-links-btn" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Apply Selected Links
+          </button>
+        </div>
+
+        <div id="links-empty-state" class="links-empty">
+          Click "Scan" to find internal linking opportunities in your content.
+        </div>
+      </div>
+
+      <!-- SEO Settings -->
+      <div class="sidebar-section">
+        <div class="sidebar-header">
+          <span class="sidebar-title">SEO Settings</span>
+        </div>
+
+        <button class="auto-seo-btn" id="auto-seo-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+          Auto-Generate SEO
+        </button>
+
+        <div class="seo-score" id="seo-score-container">
+          <div class="seo-score-circle poor" id="seo-score-circle">0</div>
+          <div class="seo-score-info">
+            <div class="seo-score-label">SEO Score</div>
+            <div class="seo-score-text" id="seo-score-text">Needs work</div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">
+            SEO Title
+            <span class="char-counter" id="seo-title-counter">0/60</span>
+          </label>
+          <input type="text" class="form-input" id="seo-title-input" placeholder="SEO optimized title (max 60 chars)" maxlength="70" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            Meta Description
+            <span class="char-counter" id="meta-desc-counter">0/160</span>
+          </label>
+          <textarea class="form-input form-textarea" id="editor-excerpt" placeholder="Brief summary for search engines (150-160 characters ideal)..." rows="3" maxlength="200"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">SEO Keywords</label>
+          <input type="text" class="form-input" id="seo-keywords-input" placeholder="keyword1, keyword2, keyword3" />
+        </div>
+
+        <div class="seo-preview" id="seo-preview">
+          <div class="seo-preview-label">Google Preview</div>
+          <div class="seo-url">deimage.com.ng/article/<span id="seo-slug">post-url</span>/</div>
+          <a href="#" class="seo-title" id="seo-title-preview">Page Title</a>
+          <p class="seo-description" id="seo-description-preview">Meta description will appear here...</p>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="sidebar-section">
+        <div class="sidebar-header">
+          <span class="sidebar-title">Tags</span>
+        </div>
+        <div class="form-group">
+          <div class="tags-input-container" id="tags-container">
+            <input type="text" class="tags-input" id="tags-input" placeholder="Add tags (press Enter)..." />
+          </div>
+        </div>
+      </div>
+
+      <!-- Featured Image -->
+      <div class="sidebar-section">
+        <div class="sidebar-header">
+          <span class="sidebar-title">Featured Image</span>
+        </div>
+        
+        <div class="upload-zone" id="featured-image-zone">
+          <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <div class="upload-text">Drop image here or click to upload</div>
+          <div class="upload-hint">Recommended: 1200 x 630 pixels</div>
+          <input type="file" id="featured-image-input" accept="image/*" style="display: none;" />
+        </div>
+        
+        <div class="image-preview" id="image-preview" style="display: none;">
+          <img id="image-preview-img" src="" alt="Featured" />
+          <button class="image-remove" id="image-remove">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Categories -->
+      <div class="sidebar-section">
+        <div class="sidebar-header">
+          <span class="sidebar-title">Category</span>
+        </div>
+        
+        <div class="form-group">
+          <select class="form-input form-select" id="editor-category">
+            <option value="">Select Category</option>
+            <option value="technology">Technology</option>
+            <option value="design">Design</option>
+            <option value="business">Business</option>
+            <option value="lifestyle">Lifestyle</option>
+            <option value="news">News</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="sports">Sports</option>
+            <option value="politics">Politics</option>
+            <option value="uncategorized">Uncategorized</option>
+          </select>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Mobile Sidebar Toggle -->
+  <button class="mobile-sidebar-toggle" id="mobile-sidebar-toggle">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <div class="toast" id="toast"></div>
+
+  <!-- Validation Modal -->
+  <div id="validation-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3>⚠️ Publishing Report</h3>
+      <p>Please fix the following issues before publishing:</p>
+      <ul id="validation-errors" class="validation-list"></ul>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="document.getElementById('validation-modal').classList.remove('show')">Cancel</button>
+        <button class="btn-primary" onclick="document.getElementById('validation-modal').classList.remove('show')">Fix Issues</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Modal -->
+  <div id="progress-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3>🚀 Publishing Article...</h3>
+      <ul id="progress-list" class="progress-list"></ul>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const supabaseUrl = 'https://umzpdqsjrthzxjdjfdej.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtenBkcXNqcnRoenhqZGpmZGVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxOTkzNDUsImV4cCI6MjA5ODc3NTM0NX0.WL5o3fEwdlmE03zarFEv-PvQjedCklSqVcKR_ButMCE';
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const contentId = urlParams.get('id');
+
+    // ============================================
+    // TINY MCE INITIALIZATION (Professional Editor)
+    // ============================================
+    let tinymceReady = false;
+    let editorInstance = null;
+
+    function initTinyMCE(initialContent = '') {
+      tinymce.init({
+        selector: '#tinymce-editor',
+        height: 650,
+        menubar: 'file edit view insert format tools table help',
+        plugins: [
+          'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+          'anchor', 'searchreplace', 'visualblocks', 'visualchars', 'codesample',
+          'fullscreen', 'insertdatetime', 'media', 'table', 'help', 'wordcount',
+          'code', 'emoticons'
+        ],
+        toolbar: 'undo redo | blocks | ' +
+          'bold italic forecolor backcolor | ' +
+          'alignleft aligncenter alignright alignjustify | ' +
+          'bullist numlist outdent indent | link image media table codesample | ' +
+          'removeformat code preview fullscreen help',
+        content_style: `
+          body { 
+            font-family: 'Merriweather', Georgia, serif; 
+            font-size: 1.125rem; 
+            line-height: 1.8; 
+            color: #09090b;
+            padding: 40px 48px;
+            max-width: 100%;
+          }
+          h1, h2, h3, h4 { font-family: 'Syne', sans-serif; font-weight: 700; margin: 1.5em 0 0.5em; }
+          h1 { font-size: 2.25rem; }
+          h2 { font-size: 1.875rem; }
+          h3 { font-size: 1.5rem; }
+          p { margin-bottom: 1.25em; }
+          blockquote { 
+            border-left: 4px solid #6366f1; 
+            padding-left: 1.5em; 
+            margin: 2em 0; 
+            font-style: italic; 
+            color: #52525b;
+          }
+          a { color: #2563eb; text-decoration: underline; }
+          img { max-width: 100%; height: auto; border-radius: 8px; }
+          pre { background: #1e293b; color: #f1f5f9; padding: 1em; border-radius: 8px; overflow-x: auto; }
+          code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+          ul, ol { margin: 1em 0; padding-left: 2em; }
+          li { margin-bottom: 0.5em; }
+          table { border-collapse: collapse; width: 100%; margin: 1.5em 0; }
+          table td, table th { border: 1px solid #e4e4e7; padding: 8px 12px; }
+          table th { background: #f4f4f5; font-weight: 600; }
+        `,
+        branding: false,
+        promotion: false,
+        statusbar: true,
+        elementpath: true,
+        quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+        quickbars_insert_toolbar: 'quickimage quicktable codesample hr',
+        image_advtab: true,
+        paste_data_images: true,
+        automatic_uploads: false,
+        link_default_target: '_blank',
+        link_assume_external_targets: false,
+        relative_urls: false,
+        remove_script_host: true,
+        convert_urls: true,
+        setup: function(editor) {
+          editorInstance = editor;
+          editor.on('init', function() {
+            tinymceReady = true;
+            if (initialContent) {
+              editor.setContent(initialContent);
+            }
+            updateStats();
+          });
+          editor.on('Change KeyUp Undo Redo', function() {
+            updateStats();
+            scheduleAutoSave();
+            updateSEOScore();
+          });
+        }
+      });
+    }
+
+    // Initialize TinyMCE
+    initTinyMCE();
+
+    // Elements
+    const titleInput = document.getElementById('editor-title');
+    const slugInput = document.getElementById('editor-slug');
+    const typeSelect = document.getElementById('editor-type');
+    const statusSelect = document.getElementById('editor-status');
+    const authorInput = document.getElementById('editor-author');
+    const excerptInput = document.getElementById('editor-excerpt');
+    const seoTitleInput = document.getElementById('seo-title-input');
+    const seoKeywordsInput = document.getElementById('seo-keywords-input');
+    const saveDraftBtn = document.getElementById('save-draft-btn');
+    const publishBtn = document.getElementById('publish-btn');
+    const publishDateGroup = document.getElementById('publish-date-group');
+    const publishDateInput = document.getElementById('publish-date');
+    const tagsContainer = document.getElementById('tags-container');
+    const tagsInput = document.getElementById('tags-input');
+    const wordCountEl = document.getElementById('word-count');
+    const charCountEl = document.getElementById('char-count');
+    const readingTimeEl = document.getElementById('reading-time');
+    const lastSavedEl = document.getElementById('last-saved');
+    const featuredImageZone = document.getElementById('featured-image-zone');
+    const featuredImageInput = document.getElementById('featured-image-input');
+    const imagePreview = document.getElementById('image-preview');
+    const imagePreviewImg = document.getElementById('image-preview-img');
+    const imageRemove = document.getElementById('image-remove');
+    const mobileSidebarToggle = document.getElementById('mobile-sidebar-toggle');
+    const editorSidebar = document.getElementById('editor-sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const toast = document.getElementById('toast');
+    const autoSeoBtn = document.getElementById('auto-seo-btn');
+    const scanLinksBtn = document.getElementById('scan-links-btn');
+    const applyLinksBtn = document.getElementById('apply-links-btn');
+    const linksResultContainer = document.getElementById('links-result-container');
+    const linksEmptyState = document.getElementById('links-empty-state');
+    const linksCountNumber = document.getElementById('links-count-number');
+    const linksOpportunitiesList = document.getElementById('links-opportunities-list');
+
+    let editingId = contentId;
+    let tags = [];
+    let featuredImage = null;
+    let autoSaveTimer;
+    let isSaving = false;
+    let scanResults = [];
+
+    flatpickr(publishDateInput, {
+      enableTime: true,
+      dateFormat: "Y-m-d H:i",
+      minDate: "today"
+    });
+
+    if (editingId) {
+      loadContent(editingId);
+    } else {
+      loadCurrentUser();
+    }
+
+    async function loadCurrentUser() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const name = session.user.user_metadata?.full_name || session.user.email?.split('@')[0];
+        if (name && !authorInput.value) {
+          authorInput.value = name;
+        }
+      }
+    }
+
+    titleInput.addEventListener('input', () => {
+      if (!editingId || !slugInput.dataset.manual) {
+        slugInput.value = titleInput.value.toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '');
+      }
+      updateSEOPreview();
+      updateSEOScore();
+    });
+
+    slugInput.addEventListener('input', () => {
+      slugInput.dataset.manual = 'true';
+      updateSEOPreview();
+    });
+
+    seoTitleInput.addEventListener('input', () => {
+      updateCharCounter('seo-title-counter', seoTitleInput.value.length, 60);
+      updateSEOPreview();
+      updateSEOScore();
+    });
+
+    excerptInput.addEventListener('input', () => {
+      updateCharCounter('meta-desc-counter', excerptInput.value.length, 160);
+      updateSEOPreview();
+      updateSEOScore();
+    });
+
+    seoKeywordsInput.addEventListener('input', () => { updateSEOScore(); });
+
+    statusSelect.addEventListener('change', () => {
+      publishDateGroup.style.display = statusSelect.value === 'scheduled' ? 'block' : 'none';
+    });
+
+    tagsInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        const tag = tagsInput.value.trim().replace(',', '');
+        if (tag && !tags.includes(tag)) {
+          tags.push(tag);
+          renderTags();
+          tagsInput.value = '';
+          updateSEOScore();
+        }
+      }
+    });
+
+    function renderTags() {
+      tagsContainer.querySelectorAll('.tag').forEach(t => t.remove());
+      tags.forEach((tag, index) => {
+        const tagEl = document.createElement('span');
+        tagEl.className = 'tag';
+        tagEl.innerHTML = `${tag}<span class="tag-remove" data-index="${index}">×</span>`;
+        tagsContainer.insertBefore(tagEl, tagsInput);
+      });
+      tagsContainer.querySelectorAll('.tag-remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+          tags.splice(parseInt(btn.dataset.index), 1);
+          renderTags();
+          updateSEOScore();
+        });
+      });
+    }
+
+    featuredImageZone.addEventListener('click', () => featuredImageInput.click());
+    featuredImageZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      featuredImageZone.style.borderColor = 'var(--primary)';
+    });
+    featuredImageZone.addEventListener('dragleave', () => {
+      featuredImageZone.style.borderColor = 'var(--border)';
+    });
+    featuredImageZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      featuredImageZone.style.borderColor = 'var(--border)';
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) handleImageUpload(file);
+    });
+    featuredImageInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) handleImageUpload(file);
+    });
+    imageRemove.addEventListener('click', () => {
+      featuredImage = null;
+      imagePreview.style.display = 'none';
+      featuredImageZone.style.display = 'block';
+      featuredImageZone.classList.remove('has-image');
+    });
+
+    function handleImageUpload(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        featuredImage = e.target.result;
+        imagePreviewImg.src = featuredImage;
+        imagePreview.style.display = 'block';
+        featuredImageZone.style.display = 'none';
+        featuredImageZone.classList.add('has-image');
+        updateSEOScore();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ============================================
+    // INTERNAL LINKING ENGINE
+    // ============================================
+    scanLinksBtn.addEventListener('click', scanInternalLinks);
+    applyLinksBtn.addEventListener('click', applyInternalLinks);
+
+    async function scanInternalLinks() {
+      if (!tinymceReady || !editorInstance) {
+        showToast('Editor not ready yet', 'error');
+        return;
+      }
+
+      const content = editorInstance.getContent({ format: 'text' }).trim();
+      if (!content || content.length < 50) {
+        showToast('Write more content first (at least 50 chars)', 'error');
+        return;
+      }
+
+      scanLinksBtn.disabled = true;
+      scanLinksBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Scanning...';
+
+      try {
+        let query = supabase
+          .from('content')
+          .select('id, title, slug, tags, seo_keywords, category')
+          .eq('status', 'published');
+
+        if (editingId) {
+          query = query.neq('id', editingId);
+        }
+
+        const { data: articles, error } = await query.limit(200);
+
+        if (error) throw error;
+        if (!articles || articles.length === 0) {
+          showToast('No published articles found to link to', 'error');
+          resetScanButton();
+          return;
+        }
+
+        const candidates = [];
+        articles.forEach(article => {
+          if (article.title && article.title.trim()) {
+            candidates.push({
+              phrase: article.title.trim(),
+              url: `/article/${article.slug}/`,
+              source: 'title',
+              articleId: article.id,
+              articleTitle: article.title
+            });
+          }
+
+          if (article.tags) {
+            let tagList = [];
+            if (typeof article.tags === 'string') {
+              try { tagList = JSON.parse(article.tags); }
+              catch { tagList = article.tags.split(',').map(t => t.trim()).filter(t => t); }
+            } else if (Array.isArray(article.tags)) {
+              tagList = article.tags;
+            }
+            tagList.forEach(tag => {
+              if (tag && tag.trim().length > 2) {
+                candidates.push({
+                  phrase: tag.trim(),
+                  url: `/article/${article.slug}/`,
+                  source: 'tag',
+                  articleId: article.id,
+                  articleTitle: article.title
+                });
+              }
+            });
+          }
+
+          if (article.seo_keywords) {
+            const keywords = article.seo_keywords.split(',').map(k => k.trim()).filter(k => k.length > 2);
+            keywords.forEach(keyword => {
+              candidates.push({
+                phrase: keyword,
+                url: `/article/${article.slug}/`,
+                source: 'keyword',
+                articleId: article.id,
+                articleTitle: article.title
+              });
+            });
+          }
+        });
+
+        candidates.sort((a, b) => b.phrase.length - a.phrase.length);
+
+        const html = editorInstance.getContent();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
+        const rootDiv = doc.body.firstChild;
+
+        const textNodes = [];
+        const walker = document.createTreeWalker(
+          rootDiv,
+          NodeFilter.SHOW_TEXT,
+          {
+            acceptNode: function(node) {
+              const parent = node.parentElement;
+              if (!parent) return NodeFilter.FILTER_REJECT;
+              const tag = parent.tagName.toLowerCase();
+              if (['a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'code', 'pre', 'strong', 'em'].includes(tag)) {
+                return NodeFilter.FILTER_REJECT;
+              }
+              if (parent.closest('a')) return NodeFilter.FILTER_REJECT;
+              if (!node.textContent.trim()) return NodeFilter.FILTER_REJECT;
+              return NodeFilter.FILTER_ACCEPT;
+            }
+          }
+        );
+
+        let node;
+        while (node = walker.nextNode()) {
+          textNodes.push(node);
+        }
+
+        const foundOpportunities = [];
+        const usedPhrases = new Set();
+        const usedUrls = new Set();
+
+        for (const candidate of candidates) {
+          if (usedUrls.has(candidate.url)) continue;
+          if (usedPhrases.has(candidate.phrase.toLowerCase())) continue;
+          if (candidate.phrase.length < 3) continue;
+
+          const escaped = candidate.phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const regex = new RegExp(`\\b${escaped}\\b`, 'i');
+
+          for (const textNode of textNodes) {
+            const text = textNode.textContent;
+            const match = regex.exec(text);
+            if (match) {
+              foundOpportunities.push({
+                phrase: match[0],
+                originalPhrase: candidate.phrase,
+                url: candidate.url,
+                source: candidate.source,
+                articleTitle: candidate.articleTitle,
+                textNode: textNode,
+                matchIndex: match.index,
+                matchLength: match[0].length
+              });
+              usedPhrases.add(candidate.phrase.toLowerCase());
+              usedUrls.add(candidate.url);
+              break;
+            }
+          }
+
+          if (foundOpportunities.length >= 15) break;
+        }
+
+        scanResults = foundOpportunities;
+        renderScanResults();
+
+      } catch (error) {
+        console.error('Scan error:', error);
+        showToast('Error scanning: ' + error.message, 'error');
+      } finally {
+        resetScanButton();
+      }
+    }
+
+    function resetScanButton() {
+      scanLinksBtn.disabled = false;
+      scanLinksBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Scan for Internal Links`;
+    }
+
+    function renderScanResults() {
+      if (scanResults.length === 0) {
+        linksResultContainer.style.display = 'none';
+        linksEmptyState.style.display = 'block';
+        linksEmptyState.textContent = 'No internal linking opportunities found. Try writing more content or publishing more articles.';
+        applyLinksBtn.disabled = true;
+        return;
+      }
+
+      linksEmptyState.style.display = 'none';
+      linksResultContainer.style.display = 'block';
+      linksCountNumber.textContent = scanResults.length;
+      applyLinksBtn.disabled = false;
+
+      linksOpportunitiesList.innerHTML = scanResults.map((op, idx) => `
+        <label class="link-opportunity">
+          <input type="checkbox" class="link-opportunity-checkbox" data-index="${idx}" checked>
+          <div class="link-opportunity-info">
+            <div class="link-opportunity-text">
+              Link "<code>${escapeHtml(op.phrase)}</code>"
+            </div>
+            <div class="link-opportunity-target">→ ${escapeHtml(op.articleTitle)}</div>
+          </div>
+        </label>
+      `).join('');
+
+      updateApplyButtonCount();
+
+      linksOpportunitiesList.querySelectorAll('.link-opportunity-checkbox').forEach(cb => {
+        cb.addEventListener('change', updateApplyButtonCount);
+      });
+    }
+
+    function updateApplyButtonCount() {
+      const checked = linksOpportunitiesList.querySelectorAll('.link-opportunity-checkbox:checked').length;
+      if (checked === 0) {
+        applyLinksBtn.disabled = true;
+        applyLinksBtn.innerHTML = 'No Links Selected';
+      } else {
+        applyLinksBtn.disabled = false;
+        applyLinksBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Apply ${checked} Link${checked > 1 ? 's' : ''}`;
+      }
+    }
+
+    function applyInternalLinks() {
+      if (!tinymceReady || !editorInstance) return;
+      if (scanResults.length === 0) return;
+
+      const selectedIndices = [];
+      linksOpportunitiesList.querySelectorAll('.link-opportunity-checkbox:checked').forEach(cb => {
+        selectedIndices.push(parseInt(cb.dataset.index));
+      });
+
+      if (selectedIndices.length === 0) {
+        showToast('No links selected', 'error');
+        return;
+      }
+
+      const toApply = selectedIndices.map(i => scanResults[i])
+        .sort((a, b) => b.matchIndex - a.matchIndex);
+
+      let html = editorInstance.getContent();
+
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
+      const rootDiv = doc.body.firstChild;
+
+      let applied = 0;
+
+      toApply.forEach(op => {
+        const textNode = op.textNode;
+        if (!textNode || !textNode.parentNode) return;
+
+        const text = textNode.textContent;
+        const matchIndex = text.indexOf(op.phrase);
+        if (matchIndex === -1) return;
+
+        const before = text.substring(0, matchIndex);
+        const match = text.substring(matchIndex, matchIndex + op.phrase.length);
+        const after = text.substring(matchIndex + op.phrase.length);
+
+        const link = document.createElement('a');
+        link.href = op.url;
+        link.textContent = match;
+        link.setAttribute('data-internal-link', 'true');
+
+        const parent = textNode.parentNode;
+        if (before) parent.insertBefore(document.createTextNode(before), textNode);
+        parent.insertBefore(link, textNode);
+        if (after) parent.insertBefore(document.createTextNode(after), textNode);
+        parent.removeChild(textNode);
+
+        applied++;
+      });
+
+      editorInstance.setContent(rootDiv.innerHTML);
+      
+      showToast(`✓ Applied ${applied} internal link${applied > 1 ? 's' : ''}`, 'success');
+      
+      scanResults = [];
+      linksResultContainer.style.display = 'none';
+      linksEmptyState.style.display = 'block';
+      linksEmptyState.textContent = `✓ ${applied} links applied successfully. Click "Scan" again to find more.`;
+    }
+
+    // ============================================
+    // SMART SEO AUTO-GENERATION
+    // ============================================
+    autoSeoBtn.addEventListener('click', () => {
+      generateSmartSEO();
+      showToast('SEO metadata generated!', 'success');
+    });
+
+    function generateSmartSEO() {
+      const title = titleInput.value.trim();
+      const content = tinymceReady ? editorInstance.getContent({ format: 'text' }).trim() : '';
+      const category = document.getElementById('editor-category').value;
+
+      if (title && !seoTitleInput.value) {
+        let seoTitle = title;
+        if (seoTitle.length > 60) {
+          seoTitle = seoTitle.substring(0, 57).trim() + '...';
+        }
+        if (category && seoTitle.length + category.length + 3 < 60) {
+          seoTitle = `${seoTitle} | ${capitalizeFirst(category)}`;
+        }
+        seoTitleInput.value = seoTitle;
+        updateCharCounter('seo-title-counter', seoTitle.length, 60);
+      }
+
+      if (!excerptInput.value && content.length > 50) {
+        const description = generateMetaDescription(content, 155);
+        excerptInput.value = description;
+        updateCharCounter('meta-desc-counter', description.length, 160);
+      }
+
+      if (!seoKeywordsInput.value && content.length > 50) {
+        const keywords = extractKeywords(content, title, 5);
+        seoKeywordsInput.value = keywords.join(', ');
+      }
+
+      if (tags.length === 0 && content.length > 50) {
+        const autoTags = extractKeywords(content, title, 5);
+        tags = autoTags.slice(0, 5);
+        renderTags();
+      }
+
+      updateSEOPreview();
+      updateSEOScore();
+    }
+
+    function generateMetaDescription(content, maxLength = 155) {
+      const cleanContent = content.replace(/\s+/g, ' ').trim();
+      if (cleanContent.length <= maxLength) return cleanContent;
+
+      let description = cleanContent.substring(0, maxLength);
+      const lastSentence = description.lastIndexOf('.');
+      const lastComma = description.lastIndexOf(',');
+      const lastSpace = description.lastIndexOf(' ');
+      
+      if (lastSentence > maxLength * 0.6) {
+        description = description.substring(0, lastSentence + 1);
+      } else if (lastComma > maxLength * 0.6) {
+        description = description.substring(0, lastComma) + '...';
+      } else if (lastSpace > maxLength * 0.6) {
+        description = description.substring(0, lastSpace) + '...';
+      } else {
+        description = description + '...';
+      }
+
+      return description;
+    }
+
+    function extractKeywords(content, title, maxKeywords = 5) {
+      const text = (title + ' ' + content).toLowerCase();
+      const stopWords = new Set([
+        'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
+        'of', 'with', 'by', 'from', 'is', 'are', 'was', 'were', 'be', 'been',
+        'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would',
+        'could', 'should', 'may', 'might', 'can', 'this', 'that', 'these',
+        'those', 'i', 'you', 'he', 'she', 'it', 'we', 'they', 'me', 'him',
+        'her', 'us', 'them', 'my', 'your', 'his', 'its', 'our', 'their',
+        'what', 'which', 'who', 'whom', 'when', 'where', 'why', 'how',
+        'not', 'no', 'nor', 'as', 'if', 'then', 'than', 'too', 'very',
+        'just', 'about', 'above', 'after', 'again', 'all', 'also', 'am',
+        'any', 'because', 'before', 'between', 'both', 'each', 'few',
+        'more', 'most', 'other', 'some', 'such', 'only', 'own', 'same',
+        'so', 'into', 'over', 'under', 'up', 'down', 'out', 'off'
+      ]);
+
+      const words = text.match(/\b[a-z]{4,}\b/g) || [];
+      const wordCount = {};
+      words.forEach(word => {
+        if (!stopWords.has(word)) {
+          wordCount[word] = (wordCount[word] || 0) + 1;
+        }
+      });
+
+      const sorted = Object.entries(wordCount)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, maxKeywords)
+        .map(([word]) => word);
+
+      const titleWords = title.toLowerCase().match(/\b[a-z]{4,}\b/g) || [];
+      titleWords.forEach(word => {
+        if (!stopWords.has(word) && !sorted.includes(word) && sorted.length < maxKeywords) {
+          sorted.unshift(word);
+        }
+      });
+
+      return sorted.slice(0, maxKeywords);
+    }
+
+    function capitalizeFirst(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // ============================================
+    // SEO SCORE CALCULATOR
+    // ============================================
+    function updateSEOScore() {
+      let score = 0;
+      const title = titleInput.value.trim();
+      const seoTitle = seoTitleInput.value.trim();
+      const metaDesc = excerptInput.value.trim();
+      const slug = slugInput.value.trim();
+      const keywords = seoKeywordsInput.value.trim();
+      const content = tinymceReady ? editorInstance.getContent({ format: 'text' }).trim() : '';
+      const category = document.getElementById('editor-category').value;
+
+      if (title.length > 0) score += 15;
+      if (seoTitle.length >= 30 && seoTitle.length <= 60) score += 15;
+      else if (seoTitle.length > 0) score += 8;
+      if (metaDesc.length >= 120 && metaDesc.length <= 160) score += 20;
+      else if (metaDesc.length > 50) score += 10;
+      if (slug.length > 0 && slug.length < 60) score += 10;
+      if (keywords.length > 0) score += 10;
+      if (tags.length >= 3) score += 10;
+      else if (tags.length > 0) score += 5;
+      if (featuredImage) score += 10;
+      if (category) score += 5;
+
+      const wordCount = content.split(/\s+/).filter(w => w.length > 0).length;
+      if (wordCount >= 300) score += 5;
+      else if (wordCount >= 100) score += 3;
+
+      if (tinymceReady) {
+        const html = editorInstance.getContent();
+        const internalLinks = (html.match(/data-internal-link="true"/g) || []).length;
+        if (internalLinks >= 3) score += 5;
+        else if (internalLinks >= 1) score += 2;
+      }
+
+      const scoreCircle = document.getElementById('seo-score-circle');
+      const scoreText = document.getElementById('seo-score-text');
+      
+      scoreCircle.textContent = Math.min(score, 100);
+      scoreCircle.className = 'seo-score-circle';
+
+      if (score >= 80) { scoreCircle.classList.add('excellent'); scoreText.textContent = 'Excellent!'; }
+      else if (score >= 60) { scoreCircle.classList.add('good'); scoreText.textContent = 'Good'; }
+      else if (score >= 40) { scoreCircle.classList.add('fair'); scoreText.textContent = 'Needs improvement'; }
+      else { scoreCircle.classList.add('poor'); scoreText.textContent = 'Poor'; }
+    }
+
+    function updateCharCounter(elementId, current, max) {
+      const counter = document.getElementById(elementId);
+      if (!counter) return;
+      counter.textContent = `${current}/${max}`;
+      counter.className = 'char-counter';
+      if (current > max) counter.classList.add('danger');
+      else if (current > max * 0.9) counter.classList.add('warning');
+      else if (current >= max * 0.7) counter.classList.add('success');
+    }
+
+    function updateSEOPreview() {
+      const title = seoTitleInput.value || titleInput.value || 'Page Title';
+      const description = excerptInput.value || 'Meta description will appear here...';
+      const slug = slugInput.value || 'post-url';
+
+      document.getElementById('seo-title-preview').textContent = title;
+      document.getElementById('seo-description-preview').textContent = description;
+      document.getElementById('seo-slug').textContent = slug;
+    }
+
+    function updateStats() {
+      if (!tinymceReady || !editorInstance) return;
+      const text = editorInstance.getContent({ format: 'text' });
+      const wordCount = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+      const charCount = text.length;
+      const readingTime = Math.ceil(wordCount / 200);
+
+      wordCountEl.textContent = wordCount;
+      charCountEl.textContent = charCount;
+      readingTimeEl.textContent = `${readingTime} min read`;
+    }
+
+    function scheduleAutoSave() {
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        if (!isSaving) saveContent(true, null, false);
+      }, 30000);
+    }
+
+    saveDraftBtn.addEventListener('click', () => saveContent(false, null, true));
+    publishBtn.addEventListener('click', handlePublishClick);
+
+    async function handlePublishClick() {
+      const { errors, warnings } = await validateForPublish();
+      
+      if (errors.length > 0 || warnings.length > 0) {
+        showValidationModal(errors, warnings);
+        if (errors.length > 0) return;
+      }
+      
+      await publishArticle();
+    }
+
+    async function saveContent(isAuto = false, statusOverride = null, showToastOnSuccess = true) {
+      if (isSaving) return;
+      
+      if (!titleInput.value.trim()) {
+        showToast('Please enter a title', 'error');
+        return;
+      }
+
+      if (!slugInput.value.trim()) {
+        showToast('Please enter a URL slug', 'error');
+        return;
+      }
+      
+      isSaving = true;
+      
+      try {
+        const payload = {
+          title: titleInput.value.trim(),
+          slug: slugInput.value.trim(),
+          type: typeSelect.value,
+          status: statusOverride || statusSelect.value,
+          excerpt: excerptInput.value.trim(),
+          body: tinymceReady ? editorInstance.getContent() : '',
+          tags: tags,
+          featured_image: featuredImage,
+          category: document.getElementById('editor-category').value,
+          author: authorInput.value.trim(),
+          seo_title: seoTitleInput.value.trim(),
+          seo_keywords: seoKeywordsInput.value.trim(),
+          updated_at: new Date().toISOString()
+        };
+
+        if (statusSelect.value === 'scheduled' && publishDateInput.value) {
+          payload.publish_date = publishDateInput.value;
+        }
+
+        let result;
+        if (editingId) {
+          result = await supabase.from('content').update(payload).eq('id', editingId);
+        } else {
+          payload.created_at = new Date().toISOString();
+          result = await supabase.from('content').insert([payload]);
+          if (result.data) {
+            editingId = result.data[0].id;
+            window.history.replaceState({}, '', `?id=${editingId}`);
+          }
+        }
+
+        if (result.error) throw new Error(result.error.message);
+
+        const now = new Date();
+        lastSavedEl.textContent = `Last saved: ${now.toLocaleTimeString()}`;
+        
+        if (!isAuto && showToastOnSuccess) showToast('Content saved successfully!', 'success');
+      } catch (error) {
+        console.error('Save error:', error);
+        if (!isAuto) showToast(`Error: ${error.message}`, 'error');
+      } finally {
+        isSaving = false;
+      }
+    }
+
+    // ============================================
+    // PUBLISHING VALIDATION & PIPELINE
+    // ============================================
+    async function validateForPublish() {
+      const errors = [];
+      const warnings = [];
+
+      // 1. Unique slug
+      const { data: slugExists } = await supabase
+        .from('content')
+        .select('id')
+        .eq('slug', slugInput.value.trim())
+        .neq('id', editingId || '00000000-0000-0000-0000-000000000000')
+        .maybeSingle();
+      if (slugExists) errors.push('Slug is already in use. Please choose a unique URL slug.');
+
+      // 2. Duplicate title
+      const { data: titleExists } = await supabase
+        .from('content')
+        .select('id')
+        .ilike('title', titleInput.value.trim())
+        .neq('id', editingId || '00000000-0000-0000-0000-000000000000')
+        .maybeSingle();
+      if (titleExists) warnings.push('An article with a similar title already exists.');
+
+      // 3. SEO title present
+      if (!seoTitleInput.value.trim()) errors.push('SEO Title is missing.');
+
+      // 4. Meta description present
+      if (!excerptInput.value.trim()) errors.push('Meta Description is missing.');
+
+      // 5. Featured image exists
+      if (!featuredImage) errors.push('Featured Image is required for social sharing and SEO.');
+
+      // 6. Category selected
+      if (!document.getElementById('editor-category').value) errors.push('Category is not selected.');
+
+      // 7. Author selected
+      if (!authorInput.value.trim()) errors.push('Author name is missing.');
+
+      // 8. Minimum content length
+      const content = tinymceReady ? editorInstance.getContent({ format: 'text' }).trim() : '';
+      const wordCount = content.split(/\s+/).filter(w => w.length > 0).length;
+      if (wordCount < 300) errors.push(`Content is too short (${wordCount} words). Minimum 300 words recommended for SEO.`);
+
+      // 9. Valid canonical URL (slug format)
+      if (!slugInput.value.trim() || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slugInput.value.trim())) {
+        errors.push('Invalid URL slug format. Use lowercase letters, numbers, and hyphens only.');
+      }
+
+      // 10. Valid schema (check if category is present for breadcrumb)
+      if (!document.getElementById('editor-category').value) {
+        errors.push('Cannot generate valid Breadcrumb schema without a category.');
+      }
+
+      return { errors, warnings };
+    }
+
+    function showValidationModal(errors, warnings) {
+      const modal = document.getElementById('validation-modal');
+      const errorList = document.getElementById('validation-errors');
+      errorList.innerHTML = '';
+      
+      errors.forEach(err => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span>❌</span> ${err}`;
+        errorList.appendChild(li);
+      });
+      
+      warnings.forEach(warn => {
+        const li = document.createElement('li');
+        li.className = 'warning';
+        li.innerHTML = `<span>⚠️</span> ${warn}`;
+        errorList.appendChild(li);
+      });
+      
+      modal.classList.add('show');
+    }
+
+
+    async function loadContent(id) {
+      try {
+        console.log('Loading article:', id);
+        const { data, error } = await supabase.from('content').select('*').eq('id', id).single();
+        
+        if (error) {
+          console.error('Supabase error:', error);
+          showToast('Error loading content: ' + error.message, 'error');
+          return;
+        }
+
+        if (!data) {
+          showToast('Article not found', 'error');
+          return;
+        }
+
+        console.log('Article loaded:', data.title);
+
+        // Populate form fields
+        titleInput.value = data.title || '';
+        slugInput.value = data.slug || '';
+        slugInput.dataset.manual = 'true';
+        typeSelect.value = data.type || 'post';
+        statusSelect.value = data.status || 'draft';
+        authorInput.value = data.author || '';
+        excerptInput.value = data.excerpt || '';
+        seoTitleInput.value = data.seo_title || '';
+        seoKeywordsInput.value = data.seo_keywords || '';
+        
+        // Wait for TinyMCE to be ready, then set content
+        const waitForEditor = setInterval(() => {
+          if (tinymceReady && editorInstance) {
+            clearInterval(waitForEditor);
+            editorInstance.setContent(data.body || '');
+            updateStats();
+          }
+        }, 100);
+        
+        // Timeout after 5 seconds
+        setTimeout(() => {
+          clearInterval(waitForEditor);
+          if (!tinymceReady && editorInstance) {
+            editorInstance.setContent(data.body || '');
+          }
+        }, 5000);
+        
+        // Load tags
+        if (data.tags) {
+          if (typeof data.tags === 'string') {
+            try { tags = JSON.parse(data.tags); }
+            catch { tags = data.tags.split(',').map(t => t.trim()).filter(t => t); }
+          } else if (Array.isArray(data.tags)) {
+            tags = data.tags;
+          }
+          renderTags();
+        }
+        
+        // Load category
+        if (data.category) {
+          document.getElementById('editor-category').value = data.category;
+        }
+
+        // Load featured image
+        if (data.featured_image) {
+          featuredImage = data.featured_image;
+          imagePreviewImg.src = featuredImage;
+          imagePreview.style.display = 'block';
+          featuredImageZone.style.display = 'none';
+          featuredImageZone.classList.add('has-image');
+        }
+
+        // Load publish date
+        if (data.publish_date) {
+          publishDateInput.value = data.publish_date;
+          publishDateGroup.style.display = 'block';
+        }
+
+        // Update counters and previews
+        updateCharCounter('seo-title-counter', seoTitleInput.value.length, 60);
+        updateCharCounter('meta-desc-counter', excerptInput.value.length, 160);
+        updateSEOPreview();
+        updateSEOScore();
+        
+        if (data.updated_at) {
+          const updated = new Date(data.updated_at);
+          lastSavedEl.textContent = `Last saved: ${updated.toLocaleTimeString()}`;
+        }
+      } catch (error) {
+        console.error('Load content error:', error);
+        showToast('Error loading content', 'error');
+      }
+    }
+
+
+
+    // ============================================
+    // NEW BACKEND PUBLISHING FUNCTION
+    // ============================================
+    async function publishArticle() {
+  const modal = document.getElementById('progress-modal');
+  const list = document.getElementById('progress-list');
+  list.innerHTML = '';
+  modal.classList.add('show');
+  
+  function addStep(text, status = 'saving') {
+    const li = document.createElement('li');
+    li.className = status;
+    li.innerHTML = `<span>${status === 'success' ? '✓' : status === 'error' ? '✗' : '⏳'}</span> ${text}`;
+    list.appendChild(li);
+    return li;
+  }
+
+  try {
+    // 1. Validate
+    let step0 = addStep('Validating article...', 'saving');
+    const { data: slugExists } = await supabase
+      .from('content')
+      .select('id')
+      .eq('slug', slugInput.value.trim())
+      .neq('id', editingId || '00000000-0000-0000-0000-000000000000')
+      .maybeSingle();
+    
+    if (slugExists) {
+      throw new Error('Slug is already in use');
+    }
+    step0.className = 'success';
+    step0.innerHTML = '<span>✓</span> Validation passed';
+
+    // 2. Save with published status
+    let step1 = addStep('Publishing article...', 'saving');
+    await saveContent(false, 'published', false);
+    step1.className = 'success';
+    step1.innerHTML = '<span>✓</span> Article published successfully';
+
+    addStep('Article is now live!', 'success');
+    
+    setTimeout(() => {
+      modal.classList.remove('show');
+      showToast('Article published successfully!', 'success');
+    }, 1500);
+
+  } catch (error) {
+    console.error(error);
+    addStep(`Error: ${error.message}`, 'error');
+  }
+}
+
+
+
+
+    mobileSidebarToggle.addEventListener('click', () => {
+      editorSidebar.classList.add('open');
+      sidebarOverlay.classList.add('open');
+    });
+
+    sidebarOverlay.addEventListener('click', () => {
+      editorSidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('open');
+    });
+
+    function showToast(message, type = 'info') {
+      toast.textContent = message;
+      toast.className = `toast show ${type}`;
+      setTimeout(() => { toast.classList.remove('show'); }, 4000);
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    let hasChanges = false;
+    titleInput.addEventListener('input', () => { hasChanges = true; });
+    
+    window.addEventListener('beforeunload', (e) => {
+      if (hasChanges && !isSaving) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault();
+        saveContent(false, null, true);
+      }
+    });
+
+    const style = document.createElement('style');
+    style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+    document.head.appendChild(style);
+
+    updateSEOScore();
+  </script>
+</body>
+</html>
+
