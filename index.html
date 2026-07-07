@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>De Image Magazine | Stories That Matter</title>
+  <meta name="description" content="Your source for global news, culture, and insight. We deliver stories that matter — fast, clear, and reliable.">
+  <meta name="keywords" content="news, magazine, stories, culture, technology, business">
+  
+  <!-- SEO & Crawlability -->
+  <link rel="canonical" href="https://deimage.com.ng/">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="De Image Magazine | Stories That Matter">
+  <meta property="og:description" content="Your source for global news, culture, and insight.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://deimage.com.ng">
+  <meta property="og:image" content="https://deimage.com.ng/assets/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="De Image Magazine | Stories That Matter">
+  <meta name="twitter:description" content="Your source for global news, culture, and insight.">
+  <meta name="twitter:image" content="https://deimage.com.ng/assets/og-default.jpg">
+
+  <!-- Preconnect to critical origins for faster DNS/TLS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://umzpdqsjrthzxjdjfdej.supabase.co">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Syne:wght@700;800;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+
+
+
+
+  <link rel="stylesheet" href="./home.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="./home.css"></noscript>
+<style>
+.hero-featured-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 2.4em;
+  line-height: 1.2em;
+}
+
+
+
+/* ================= PREMIUM FOOTER ================= */
+footer {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #fff;
+  padding: 40px 20px 20px;
+  margin-top: 60px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.footer-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 30px;
+}
+
+.footer-brand {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.footer-brand .nav-logo {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 900;
+  margin-bottom: 12px;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+.footer-brand .nav-logo span {
+  color: #f97316;
+}
+
+.footer-brand p {
+  font-size: 13px;
+  line-height: 1.6;
+  opacity: 0.7;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.footer-col h4 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.9;
+}
+
+.footer-col a {
+  display: block;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  font-size: 13px;
+  margin-bottom: 10px;
+  transition: all 0.2s;
+}
+
+.footer-col a:hover {
+  color: #f97316;
+  transform: translateX(4px);
+}
+
+/* ================= COMPACT PREMIUM LAYOUT ================= */
+.article-wrapper {
+  max-width: 640px;
+  margin: 16px auto 32px;
+  padding: 0 16px;
+}
+
+.article-title {
+  font-size: clamp(1.4rem, 2.8vw, 1.9rem);
+  line-height: 1.3;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.article-meta-row {
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.meta-date {
+  font-size: 10px;
+}
+
+.meta-category {
+  font-size: 9px;
+  padding: 3px 8px;
+}
+
+.article-image {
+  height: 260px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+}
+
+.author-box {
+  margin: 24px 0 16px;
+  padding-top: 16px;
+  gap: 10px;
+}
+
+.author-avatar {
+  width: 38px;
+  height: 38px;
+}
+
+.author-name {
+  font-size: 12px;
+}
+
+.author-role {
+  font-size: 10px;
+}
+
+.share-bar {
+  gap: 8px;
+  margin: 16px 0 24px;
+}
+
+.share-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 5px;
+}
+
+.share-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.article-content {
+  font-size: 14.5px;
+  line-height: 1.7;
+}
+
+.article-content p {
+  margin-bottom: 14px;
+}
+
+.article-content h1 {
+  font-size: 1.7rem;
+  margin: 24px 0 12px;
+}
+
+.article-content h2 {
+  font-size: 1.3rem;
+  margin: 22px 0 10px;
+}
+
+.article-content h3 {
+  font-size: 1.05rem;
+  margin: 18px 0 8px;
+}
+
+.article-content ul,
+.article-content ol {
+  margin: 14px 0;
+  padding-left: 1rem;
+}
+
+.article-content li {
+  margin-bottom: 8px;
+  line-height: 1.7;
+}
+
+.article-content img {
+  margin: 16px 0;
+  border-radius: 8px;
+}
+
+.article-content figure {
+  margin: 20px 0;
+}
+
+.article-content figcaption {
+  margin-top: 6px;
+  font-size: 11px;
+}
+
+.article-content blockquote {
+  padding-left: 14px;
+  margin: 18px 0;
+  font-size: 14px;
+}
+
+.back-btn {
+  margin-bottom: 14px;
+  font-size: 11px;
+}
+
+#progressBar {
+  height: 2px;
+}
+
+#menu-container {
+  min-height: 60px;
+}
+
+/* ================= MOBILE COMPACT ================= */
+@media (max-width: 768px) {
+  .article-wrapper {
+    padding: 0 14px;
+    margin: 12px auto 24px;
+  }
+
+  .article-title {
+    font-size: 1.3rem;
+  }
+
+  .article-image {
+    height: 200px;
+    margin-bottom: 16px;
+  }
+
+  .article-content {
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .article-content h2 {
+    font-size: 1.2rem;
+    margin: 18px 0 8px;
+  }
+
+  .article-content h3 {
+    font-size: 1rem;
+    margin: 14px 0 6px;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+  }
+
+  .class-card {
+    flex: 0 0 240px;
+  }
+
+  .post-image {
+    height: 140px;
+  }
+
+  .class-name {
+    font-size: 13px;
+  }
+
+  .class-desc {
+    font-size: 11px;
+  }
+}
+
+
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 9999;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu.open {
+  visibility: visible;
+  opacity: 1;
+}
+
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-menu-overlay.show {
+  opacity: 1;
+}
+
+.mobile-menu-content {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 85%;
+  max-width: 400px;
+  height: 100vh;
+  background: #fff;
+  z-index: 10000;
+  transition: right 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-menu.open .mobile-menu-content {
+  right: 0;
+}
+
+
+
+</style>
+
+  <!-- Structured Data for SEO (Helps Google understand your site) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "De Image Magazine",
+    "url": "https://deimage.com.ng",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://deimage.com.ng/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-container">
+      <a href="/" class="logo">DE IMAGE</a>
+      <div class="header-right">
+        <span class="logo-mag">MAG</span>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE MENU DRAWER -->
+  <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+    <div class="mobile-menu-content">
+      <div class="mobile-menu-header">
+        <span class="logo">DE IMAGE<span class="logo-star">★</span>MAG</span>
+        <button class="menu-close" id="menu-close" aria-label="Close menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <nav class="mobile-menu-nav" aria-label="Mobile navigation">
+        <a href="/" class="mobile-nav-link">Home</a>
+        <a href="/category/technology" class="mobile-nav-link">Technology</a>
+        <a href="/category/business" class="mobile-nav-link">Business</a>
+        <a href="/category/culture" class="mobile-nav-link">Culture</a>
+        <a href="/about" class="mobile-nav-link">About</a>
+      </nav>
+      <div class="mobile-menu-footer">
+        <a href="/subscribe" class="subscribe-btn">Subscribe</a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-grid" id="hero-grid">
+      <!-- Loading skeleton -->
+      <div class="hero-featured skeleton">
+        <div class="skeleton-image" style="height: 500px;"></div>
+      </div>
+      <div class="hero-sidebar">
+        <div class="skeleton" style="height: 160px;"></div>
+        <div class="skeleton" style="height: 160px;"></div>
+        <div class="skeleton" style="height: 160px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORY FILTERS -->
+  <section class="filters">
+    <div class="filters-wrapper" id="filters-wrapper">
+      <button class="filter-btn active" data-category="all">All Stories</button>
+      <button class="filter-btn" data-category="technology">Technology</button>
+      <button class="filter-btn" data-category="business">Business</button>
+      <button class="filter-btn" data-category="lifestyle">Lifestyle</button>
+      <button class="filter-btn" data-category="news">News</button>
+      <button class="filter-btn" data-category="entertainment">Entertainment</button>
+      <button class="filter-btn" data-category="sports">Sports</button>
+      <button class="filter-btn" data-category="politics">Politics</button>
+    </div>
+  </section>
+
+  <!-- ARTICLES GRID -->
+  <section class="articles-section">
+    <div class="section-header">
+      <h2 class="section-title">Latest Stories</h2>
+    </div>
+    
+    <div class="articles-grid" id="articles-grid">
+      <!-- Loading skeletons -->
+      <div class="skeleton-card">
+        <div class="skeleton skeleton-image"></div>
+        <div class="skeleton-content">
+          <div class="skeleton skeleton-text short"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text medium"></div>
+        </div>
+      </div>
+      <div class="skeleton-card">
+        <div class="skeleton skeleton-image"></div>
+        <div class="skeleton-content">
+          <div class="skeleton skeleton-text short"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text medium"></div>
+        </div>
+      </div>
+      <div class="skeleton-card">
+        <div class="skeleton skeleton-image"></div>
+        <div class="skeleton-content">
+          <div class="skeleton skeleton-text short"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text medium"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="load-more" id="load-more" style="display: none;">
+      <button class="load-more-btn" id="load-more-btn">Load More Stories</button>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="empty-state" style="display: none;">
+      <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+      <h3 class="empty-title">No stories found</h3>
+      <p class="empty-description">Check back later for new content</p>
+    </div>
+  </section>
+
+ <!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo">DE IMAGE<span>★</span>MAG</div>
+      <p>Your source for global news, culture, and insight. We deliver stories that matter — fast, clear, and reliable.</p>
+    </div>
+    <div class="footer-col">
+      <h4>✦ Sections</h4>
+      <a href="/">Home</a>
+      <a href="/?category=politics">Politics</a>
+      <a href="/?category=business">Business</a>
+      <a href="/?category=technology">Technology</a>
+      <a href="/?category=entertainment">Entertainment</a>
+    </div>
+    <div class="footer-col">
+      <h4>◆ Company</h4>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+      <a href="/advertise/">Advertise</a>
+    </div>
+    <div class="footer-col">
+      <h4>✦ Legal</h4>
+      <a href="/privacy/">Privacy Policy</a>
+      <a href="/terms/">Terms of Use</a>
+      <a href="/editorial-policy/">Editorial Policy</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 De Image Magazine // All rights reserved</p>
+  </div>
+</footer>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const SUPABASE_URL = 'https://umzpdqsjrthzxjdjfdej.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtenBkcXNqcnRoenhqZGpmZGVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxOTkzNDUsImV4cCI6MjA5ODc3NTM0NX0.WL5o3fEwdlmE03zarFEv-PvQjedCklSqVcKR_ButMCE';
+const ARTICLES_PER_PAGE = 9;
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ============================================
+// STATE MANAGEMENT
+// ============================================
+const state = {
+  allArticles: [],        // All published articles (for hero)
+  filteredArticles: [],   // Filtered articles (for grid)
+  currentCategory: 'all',
+  currentPage: 1,
+  hasMore: true,
+  isLoading: false
+};
+
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
+
+function cleanText(html, limit = 155) {
+  if (!html) return "";
+  const text = html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+  return text.length > limit 
+    ? text.substring(0, limit).replace(/\s+\S*$/, "") + "..."
+    : text;
+}
+
+function formatDate(dateString) {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  const now = new Date();
+  const diff = now - date;
+  
+  if (diff < 86400000) {
+    const hours = Math.floor(diff / 3600000);
+    if (hours < 1) {
+      const minutes = Math.floor(diff / 60000);
+      return minutes < 1 ? 'Just now' : `${minutes}m ago`;
+    }
+    return `${hours}h ago`;
+  }
+  
+  if (diff < 604800000) {
+    const days = Math.floor(diff / 86400000);
+    return `${days}d ago`;
+  }
+  
+  return date.toLocaleDateString('en-US', { 
+    month: 'short', 
+    day: 'numeric',
+    year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+  });
+}
+
+function getInitials(name) {
+  if (!name) return 'SW';
+  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+}
+
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// ============================================
+// DATA FETCHING
+// ============================================
+async function fetchArticles(page = 1, category = 'all') {
+  if (state.isLoading) return;
+
+  state.isLoading = true;
+
+  const offset = (page - 1) * ARTICLES_PER_PAGE;
+  const end = offset + ARTICLES_PER_PAGE - 1;
+
+  try {
+    let query = supabase
+      .from('content')
+      .select('*')
+      .eq('status', 'published')
+      .order('updated_at', { ascending: false })
+      .range(offset, end);
+
+    if (category !== 'all') {
+      query = query.eq('category', category);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    if (page === 1) {
+      if (category === 'all') {
+        state.allArticles = data || [];
+      }
+
+      state.filteredArticles = data || [];
+    } else {
+      state.filteredArticles = [
+        ...state.filteredArticles,
+        ...(data || [])
+      ];
+    }
+
+    state.currentPage = page;
+    state.hasMore = (data?.length || 0) === ARTICLES_PER_PAGE;
+
+    if (category === 'all') {
+      renderHero();
+    }
+
+    renderArticlesGrid();
+
+  } catch (error) {
+    console.error(error);
+    showEmptyState();
+  } finally {
+    state.isLoading = false;
+  }
+}
+
+// ============================================
+// RENDERING FUNCTIONS
+// ============================================
+
+function renderHero() {
+  const heroGrid = document.getElementById('hero-grid');
+  
+  // Hero ALWAYS shows latest articles (not filtered)
+  const articles = state.allArticles;
+  
+  if (articles.length === 0) {
+    heroGrid.innerHTML = '';
+    return;
+  }
+
+  const featured = articles[0];
+  const sidebar = articles.slice(1, 4);
+
+  heroGrid.innerHTML = `
+    <a href="/article/${featured.slug}/" class="hero-featured fade-in">
+      <img src="${featured.featured_image || 'https://via.placeholder.com/800x500/f1f5f9/64748b?text=Featured+Story'}" 
+           alt="${escapeHtml(featured.title)}" 
+           class="hero-featured-image">
+      <div class="hero-featured-overlay">
+        <span class="hero-featured-category">${escapeHtml(featured.category || 'Featured')}</span>
+        <h2 class="hero-featured-title">${escapeHtml(featured.title)}</h2>
+        <p class="hero-featured-excerpt">${escapeHtml(featured.excerpt || cleanText(featured.body, 150))}</p>
+        <div class="hero-featured-meta">
+          <span>${escapeHtml(featured.author || 'Staff Writer')}</span>
+          <span>•</span>
+          <span>${formatDate(featured.updated_at)}</span>
+        </div>
+      </div>
+    </a>
+    
+    <div class="hero-sidebar">
+      ${sidebar.map(article => `
+        <a href="/article/${article.slug}/" class="hero-side-card fade-in">
+          <img src="${article.featured_image || 'https://via.placeholder.com/120x120/f1f5f9/64748b?text=News'}" 
+               alt="${escapeHtml(article.title)}" 
+               class="hero-side-image">
+          <div class="hero-side-content">
+            <span class="hero-side-category">${escapeHtml(article.category || 'News')}</span>
+            <h3 class="hero-side-title">${escapeHtml(article.title)}</h3>
+            <span class="hero-side-meta">${formatDate(article.updated_at)}</span>
+          </div>
+        </a>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderArticlesGrid() {
+  const grid = document.getElementById('articles-grid');
+  const loadMore = document.getElementById('load-more');
+  const emptyState = document.getElementById('empty-state');
+  
+  // Grid shows filtered articles (skip first 4 for hero)
+  const articles =
+    state.currentCategory === "all"
+        ? state.filteredArticles.slice(4)
+        : state.filteredArticles;
+
+  if (articles.length === 0) {
+    grid.innerHTML = '';
+    emptyState.style.display = 'block';
+    loadMore.style.display = 'none';
+    return;
+  }
+
+  emptyState.style.display = 'none';
+  grid.innerHTML = articles.map(article => renderArticleCard(article)).join('');
+  loadMore.style.display = state.hasMore ? 'block' : 'none';
+}
+
+function renderArticleCard(article) {
+  return `
+    <a href="/article/${article.slug}/" class="article-card fade-in">
+      <img src="${article.featured_image || 'https://via.placeholder.com/400x220/f1f5f9/64748b?text=Article'}" 
+           alt="${escapeHtml(article.title)}" 
+           class="article-card-image"
+           loading="lazy">
+      <div class="article-card-content">
+        <span class="article-card-category">${escapeHtml(article.category || 'News')}</span>
+        <h3 class="article-card-title">${escapeHtml(article.title)}</h3>
+        <p class="article-card-excerpt">${escapeHtml(article.excerpt || cleanText(article.body, 120))}</p>
+        <div class="article-card-meta">
+          <div class="article-card-author">
+            <div class="author-avatar">${getInitials(article.author || 'Staff')}</div>
+            <span>${escapeHtml(article.author || 'Staff Writer')}</span>
+          </div>
+          <span>${formatDate(article.updated_at)}</span>
+        </div>
+      </div>
+    </a>
+  `;
+}
+
+function showEmptyState() {
+  const grid = document.getElementById('articles-grid');
+  const emptyState = document.getElementById('empty-state');
+  const loadMore = document.getElementById('load-more');
+  
+  grid.innerHTML = '';
+  emptyState.style.display = 'block';
+  loadMore.style.display = 'none';
+}
+
+function showLoadingSkeletons() {
+  const grid = document.getElementById('articles-grid');
+  grid.innerHTML = `
+    <div class="skeleton-card">
+      <div class="skeleton skeleton-image"></div>
+      <div class="skeleton-content">
+        <div class="skeleton skeleton-text short"></div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="skeleton skeleton-text medium"></div>
+      </div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skeleton skeleton-image"></div>
+      <div class="skeleton-content">
+        <div class="skeleton skeleton-text short"></div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="skeleton skeleton-text medium"></div>
+      </div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skeleton skeleton-image"></div>
+      <div class="skeleton-content">
+        <div class="skeleton skeleton-text short"></div>
+        <div class="skeleton skeleton-text"></div>
+        <div class="skeleton skeleton-text medium"></div>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================
+// MOBILE MENU
+// ============================================
+function initMobileMenu() {
+  const menuToggle = document.getElementById('menu-toggle');
+  const menuClose = document.getElementById('menu-close');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+  
+  function openMenu() {
+    mobileMenu.classList.add('open');
+    mobileMenuOverlay.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  
+  function closeMenu() {
+    mobileMenu.classList.remove('open');
+    mobileMenuOverlay.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  
+  menuToggle?.addEventListener('click', openMenu);
+  menuClose?.addEventListener('click', closeMenu);
+  mobileMenuOverlay?.addEventListener('click', closeMenu);
+  
+  // Close menu when clicking nav links
+  document.querySelectorAll('.mobile-nav-link').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+}
+
+// ============================================
+// CATEGORY FILTERS
+// ============================================
+function initFilters() {
+  const filtersWrapper = document.getElementById('filters-wrapper');
+  
+  filtersWrapper.addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+
+    // Update active state
+    filtersWrapper.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Update state
+    state.currentCategory = btn.dataset.category;
+    state.currentPage = 1;
+    state.hasMore = true;
+    
+    // Only filter the grid, NOT the hero
+    if (state.currentCategory === 'all') {
+      state.filteredArticles = state.allArticles;
+    } else {
+      state.filteredArticles = state.allArticles.filter(article => 
+        article.category === state.currentCategory
+      );
+    }
+    
+    // Re-render only the grid
+    renderArticlesGrid();
+  });
+}
+
+// ============================================
+// LOAD MORE
+// ============================================
+function initLoadMore() {
+  const loadMoreBtn = document.getElementById('load-more-btn');
+  
+  loadMoreBtn.addEventListener('click', async () => {
+    if (!state.hasMore || state.isLoading) return;
+    
+    loadMoreBtn.disabled = true;
+    loadMoreBtn.textContent = 'Loading...';
+    
+    await fetchArticles(state.currentPage + 1, state.currentCategory);
+    
+    loadMoreBtn.disabled = false;
+    loadMoreBtn.textContent = 'Load More Stories';
+  });
+}
+
+// ============================================
+// INITIALIZATION
+// ============================================
+async function init() {
+  initMobileMenu();
+  initFilters();
+  initLoadMore();
+  await fetchArticles(1, 'all');
+}
+
+init();
+</script>
+
+
+
+
+</body>
+</html>
+
