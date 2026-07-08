@@ -900,1095 +900,819 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    const supabaseUrl = 'https://umzpdqsjrthzxjdjfdej.supabase.co';
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtenBkcXNqcnRoenhqZGpmZGVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxOTkzNDUsImV4cCI6MjA5ODc3NTM0NX0.WL5o3fEwdlmE03zarFEv-PvQjedCklSqVcKR_ButMCE';
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  const supabaseUrl = 'https://umzpdqsjrthzxjdjfdej.supabase.co';
+  const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtenBkcXNqcnRoenhqZGpmZGVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxOTkzNDUsImV4cCI6MjA5ODc3NTM0NX0.WL5o3fEwdlmE03zarFEv-PvQjedCklSqVcKR_ButMCE';
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const contentId = urlParams.get('id');
+  const urlParams = new URLSearchParams(window.location.search);
+  const contentId = urlParams.get('id');
 
-    // ============================================
-    // TINY MCE INITIALIZATION (Professional Editor)
-    // ============================================
-    let tinymceReady = false;
-    let editorInstance = null;
+  let tinymceReady = false;
+  let editorInstance = null;
 
-    function initTinyMCE(initialContent = '') {
-      tinymce.init({
-        selector: '#tinymce-editor',
-        height: 650,
-        menubar: 'file edit view insert format tools table help',
-        plugins: [
-          'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-          'anchor', 'searchreplace', 'visualblocks', 'visualchars', 'codesample',
-          'fullscreen', 'insertdatetime', 'media', 'table', 'help', 'wordcount',
-          'code', 'emoticons'
-        ],
-        toolbar: 'undo redo | blocks | ' +
-          'bold italic forecolor backcolor | ' +
-          'alignleft aligncenter alignright alignjustify | ' +
-          'bullist numlist outdent indent | link image media table codesample | ' +
-          'removeformat code preview fullscreen help',
-        content_style: `
-          body { 
-            font-family: 'Merriweather', Georgia, serif; 
-            font-size: 1.125rem; 
-            line-height: 1.8; 
-            color: #09090b;
-            padding: 40px 48px;
-            max-width: 100%;
-          }
-          h1, h2, h3, h4 { font-family: 'Syne', sans-serif; font-weight: 700; margin: 1.5em 0 0.5em; }
-          h1 { font-size: 2.25rem; }
-          h2 { font-size: 1.875rem; }
-          h3 { font-size: 1.5rem; }
-          p { margin-bottom: 1.25em; }
-          blockquote { 
-            border-left: 4px solid #6366f1; 
-            padding-left: 1.5em; 
-            margin: 2em 0; 
-            font-style: italic; 
-            color: #52525b;
-          }
-          a { color: #2563eb; text-decoration: underline; }
-          img { max-width: 100%; height: auto; border-radius: 8px; }
-          pre { background: #1e293b; color: #f1f5f9; padding: 1em; border-radius: 8px; overflow-x: auto; }
-          code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
-          ul, ol { margin: 1em 0; padding-left: 2em; }
-          li { margin-bottom: 0.5em; }
-          table { border-collapse: collapse; width: 100%; margin: 1.5em 0; }
-          table td, table th { border: 1px solid #e4e4e7; padding: 8px 12px; }
-          table th { background: #f4f4f5; font-weight: 600; }
-        `,
-        branding: false,
-        promotion: false,
-        statusbar: true,
-        elementpath: true,
-        quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
-        quickbars_insert_toolbar: 'quickimage quicktable codesample hr',
-        image_advtab: true,
-        paste_data_images: true,
-        automatic_uploads: false,
-        link_default_target: '_blank',
-        link_assume_external_targets: false,
-        relative_urls: false,
-        remove_script_host: true,
-        convert_urls: true,
-        setup: function(editor) {
-          editorInstance = editor;
-          editor.on('init', function() {
-            tinymceReady = true;
-            if (initialContent) {
-              editor.setContent(initialContent);
-            }
-            updateStats();
-          });
-          editor.on('Change KeyUp Undo Redo', function() {
-            updateStats();
-            scheduleAutoSave();
-            updateSEOScore();
-          });
-        }
-      });
-    }
-
-    // Initialize TinyMCE
-    initTinyMCE();
-
-    // Elements
-    const titleInput = document.getElementById('editor-title');
-    const slugInput = document.getElementById('editor-slug');
-    const typeSelect = document.getElementById('editor-type');
-    const statusSelect = document.getElementById('editor-status');
-    const authorInput = document.getElementById('editor-author');
-    const excerptInput = document.getElementById('editor-excerpt');
-    const seoTitleInput = document.getElementById('seo-title-input');
-    const seoKeywordsInput = document.getElementById('seo-keywords-input');
-    const saveDraftBtn = document.getElementById('save-draft-btn');
-    const publishBtn = document.getElementById('publish-btn');
-    const publishDateGroup = document.getElementById('publish-date-group');
-    const publishDateInput = document.getElementById('publish-date');
-    const tagsContainer = document.getElementById('tags-container');
-    const tagsInput = document.getElementById('tags-input');
-    const wordCountEl = document.getElementById('word-count');
-    const charCountEl = document.getElementById('char-count');
-    const readingTimeEl = document.getElementById('reading-time');
-    const lastSavedEl = document.getElementById('last-saved');
-    const featuredImageZone = document.getElementById('featured-image-zone');
-    const featuredImageInput = document.getElementById('featured-image-input');
-    const imagePreview = document.getElementById('image-preview');
-    const imagePreviewImg = document.getElementById('image-preview-img');
-    const imageRemove = document.getElementById('image-remove');
-    const mobileSidebarToggle = document.getElementById('mobile-sidebar-toggle');
-    const editorSidebar = document.getElementById('editor-sidebar');
-    const sidebarOverlay = document.getElementById('sidebar-overlay');
-    const toast = document.getElementById('toast');
-    const autoSeoBtn = document.getElementById('auto-seo-btn');
-    const scanLinksBtn = document.getElementById('scan-links-btn');
-    const applyLinksBtn = document.getElementById('apply-links-btn');
-    const linksResultContainer = document.getElementById('links-result-container');
-    const linksEmptyState = document.getElementById('links-empty-state');
-    const linksCountNumber = document.getElementById('links-count-number');
-    const linksOpportunitiesList = document.getElementById('links-opportunities-list');
-
-    let editingId = contentId;
-    let tags = [];
-    let featuredImage = null;
-    let autoSaveTimer;
-    let isSaving = false;
-    let scanResults = [];
-
-    flatpickr(publishDateInput, {
-      enableTime: true,
-      dateFormat: "Y-m-d H:i",
-      minDate: "today"
-    });
-
-    if (editingId) {
-      loadContent(editingId);
-    } else {
-      loadCurrentUser();
-    }
-
-    async function loadCurrentUser() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        const name = session.user.user_metadata?.full_name || session.user.email?.split('@')[0];
-        if (name && !authorInput.value) {
-          authorInput.value = name;
-        }
-      }
-    }
-
-    titleInput.addEventListener('input', () => {
-      if (!editingId || !slugInput.dataset.manual) {
-        slugInput.value = titleInput.value.toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '');
-      }
-      updateSEOPreview();
-      updateSEOScore();
-    });
-
-    slugInput.addEventListener('input', () => {
-      slugInput.dataset.manual = 'true';
-      updateSEOPreview();
-    });
-
-    seoTitleInput.addEventListener('input', () => {
-      updateCharCounter('seo-title-counter', seoTitleInput.value.length, 60);
-      updateSEOPreview();
-      updateSEOScore();
-    });
-
-    excerptInput.addEventListener('input', () => {
-      updateCharCounter('meta-desc-counter', excerptInput.value.length, 160);
-      updateSEOPreview();
-      updateSEOScore();
-    });
-
-    seoKeywordsInput.addEventListener('input', () => { updateSEOScore(); });
-
-    statusSelect.addEventListener('change', () => {
-      publishDateGroup.style.display = statusSelect.value === 'scheduled' ? 'block' : 'none';
-    });
-
-    tagsInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ',') {
-        e.preventDefault();
-        const tag = tagsInput.value.trim().replace(',', '');
-        if (tag && !tags.includes(tag)) {
-          tags.push(tag);
-          renderTags();
-          tagsInput.value = '';
-          updateSEOScore();
-        }
-      }
-    });
-
-    function renderTags() {
-      tagsContainer.querySelectorAll('.tag').forEach(t => t.remove());
-      tags.forEach((tag, index) => {
-        const tagEl = document.createElement('span');
-        tagEl.className = 'tag';
-        tagEl.innerHTML = `${tag}<span class="tag-remove" data-index="${index}">×</span>`;
-        tagsContainer.insertBefore(tagEl, tagsInput);
-      });
-      tagsContainer.querySelectorAll('.tag-remove').forEach(btn => {
-        btn.addEventListener('click', () => {
-          tags.splice(parseInt(btn.dataset.index), 1);
-          renderTags();
-          updateSEOScore();
+  function initTinyMCE(initialContent = '') {
+    tinymce.init({
+      selector: '#tinymce-editor',
+      height: 650,
+      menubar: 'file edit view insert format tools table help',
+      plugins: [
+        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+        'anchor', 'searchreplace', 'visualblocks', 'visualchars', 'codesample',
+        'fullscreen', 'insertdatetime', 'media', 'table', 'help', 'wordcount',
+        'code', 'emoticons'
+      ],
+      toolbar: 'undo redo | blocks | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table codesample | removeformat code preview fullscreen help',
+      content_style: `
+        body { font-family: 'Merriweather', Georgia, serif; font-size: 1.125rem; line-height: 1.8; color: #09090b; padding: 40px 48px; max-width: 100%; }
+        h1, h2, h3, h4 { font-family: 'Syne', sans-serif; font-weight: 700; margin: 1.5em 0 0.5em; }
+        h1 { font-size: 2.25rem; } h2 { font-size: 1.875rem; } h3 { font-size: 1.5rem; }
+        p { margin-bottom: 1.25em; }
+        blockquote { border-left: 4px solid #6366f1; padding-left: 1.5em; margin: 2em 0; font-style: italic; color: #52525b; }
+        a { color: #2563eb; text-decoration: underline; }
+        img { max-width: 100%; height: auto; border-radius: 8px; }
+        pre { background: #1e293b; color: #f1f5f9; padding: 1em; border-radius: 8px; overflow-x: auto; }
+        code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+        ul, ol { margin: 1em 0; padding-left: 2em; } li { margin-bottom: 0.5em; }
+        table { border-collapse: collapse; width: 100%; margin: 1.5em 0; }
+        table td, table th { border: 1px solid #e4e4e7; padding: 8px 12px; }
+        table th { background: #f4f4f5; font-weight: 600; }
+      `,
+      branding: false, promotion: false, statusbar: true, elementpath: true,
+      quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+      quickbars_insert_toolbar: 'quickimage quicktable codesample hr',
+      image_advtab: true, paste_data_images: true, automatic_uploads: false,
+      link_default_target: '_blank', link_assume_external_targets: false,
+      relative_urls: false, remove_script_host: true, convert_urls: true,
+      setup: function(editor) {
+        editorInstance = editor;
+        editor.on('init', function() {
+          tinymceReady = true;
+          if (initialContent) editor.setContent(initialContent);
+          updateStats();
         });
-      });
-    }
-
-    featuredImageZone.addEventListener('click', () => featuredImageInput.click());
-    featuredImageZone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      featuredImageZone.style.borderColor = 'var(--primary)';
-    });
-    featuredImageZone.addEventListener('dragleave', () => {
-      featuredImageZone.style.borderColor = 'var(--border)';
-    });
-    featuredImageZone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      featuredImageZone.style.borderColor = 'var(--border)';
-      const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith('image/')) handleImageUpload(file);
-    });
-    featuredImageInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) handleImageUpload(file);
-    });
-    imageRemove.addEventListener('click', () => {
-      featuredImage = null;
-      imagePreview.style.display = 'none';
-      featuredImageZone.style.display = 'block';
-      featuredImageZone.classList.remove('has-image');
-    });
-
-    function handleImageUpload(file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        featuredImage = e.target.result;
-        imagePreviewImg.src = featuredImage;
-        imagePreview.style.display = 'block';
-        featuredImageZone.style.display = 'none';
-        featuredImageZone.classList.add('has-image');
-        updateSEOScore();
-      };
-      reader.readAsDataURL(file);
-    }
-
-    // ============================================
-    // INTERNAL LINKING ENGINE
-    // ============================================
-    scanLinksBtn.addEventListener('click', scanInternalLinks);
-    applyLinksBtn.addEventListener('click', applyInternalLinks);
-
-    async function scanInternalLinks() {
-      if (!tinymceReady || !editorInstance) {
-        showToast('Editor not ready yet', 'error');
-        return;
-      }
-
-      const content = editorInstance.getContent({ format: 'text' }).trim();
-      if (!content || content.length < 50) {
-        showToast('Write more content first (at least 50 chars)', 'error');
-        return;
-      }
-
-      scanLinksBtn.disabled = true;
-      scanLinksBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Scanning...';
-
-      try {
-        let query = supabase
-          .from('content')
-          .select('id, title, slug, tags, seo_keywords, category')
-          .eq('status', 'published');
-
-        if (editingId) {
-          query = query.neq('id', editingId);
-        }
-
-        const { data: articles, error } = await query.limit(200);
-
-        if (error) throw error;
-        if (!articles || articles.length === 0) {
-          showToast('No published articles found to link to', 'error');
-          resetScanButton();
-          return;
-        }
-
-        const candidates = [];
-        articles.forEach(article => {
-          if (article.title && article.title.trim()) {
-            candidates.push({
-              phrase: article.title.trim(),
-              url: `/article/${article.slug}/`,
-              source: 'title',
-              articleId: article.id,
-              articleTitle: article.title
-            });
-          }
-
-          if (article.tags) {
-            let tagList = [];
-            if (typeof article.tags === 'string') {
-              try { tagList = JSON.parse(article.tags); }
-              catch { tagList = article.tags.split(',').map(t => t.trim()).filter(t => t); }
-            } else if (Array.isArray(article.tags)) {
-              tagList = article.tags;
-            }
-            tagList.forEach(tag => {
-              if (tag && tag.trim().length > 2) {
-                candidates.push({
-                  phrase: tag.trim(),
-                  url: `/article/${article.slug}/`,
-                  source: 'tag',
-                  articleId: article.id,
-                  articleTitle: article.title
-                });
-              }
-            });
-          }
-
-          if (article.seo_keywords) {
-            const keywords = article.seo_keywords.split(',').map(k => k.trim()).filter(k => k.length > 2);
-            keywords.forEach(keyword => {
-              candidates.push({
-                phrase: keyword,
-                url: `/article/${article.slug}/`,
-                source: 'keyword',
-                articleId: article.id,
-                articleTitle: article.title
-              });
-            });
-          }
+        editor.on('Change KeyUp Undo Redo', function() {
+          updateStats(); scheduleAutoSave(); updateSEOScore();
         });
+      }
+    });
+  }
 
-        candidates.sort((a, b) => b.phrase.length - a.phrase.length);
+  initTinyMCE();
 
-        const html = editorInstance.getContent();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
-        const rootDiv = doc.body.firstChild;
+  const titleInput = document.getElementById('editor-title');
+  const slugInput = document.getElementById('editor-slug');
+  const typeSelect = document.getElementById('editor-type');
+  const statusSelect = document.getElementById('editor-status');
+  const authorInput = document.getElementById('editor-author');
+  const excerptInput = document.getElementById('editor-excerpt');
+  const seoTitleInput = document.getElementById('seo-title-input');
+  const seoKeywordsInput = document.getElementById('seo-keywords-input');
+  const saveDraftBtn = document.getElementById('save-draft-btn');
+  const publishBtn = document.getElementById('publish-btn');
+  const publishDateGroup = document.getElementById('publish-date-group');
+  const publishDateInput = document.getElementById('publish-date');
+  const tagsContainer = document.getElementById('tags-container');
+  const tagsInput = document.getElementById('tags-input');
+  const wordCountEl = document.getElementById('word-count');
+  const charCountEl = document.getElementById('char-count');
+  const readingTimeEl = document.getElementById('reading-time');
+  const lastSavedEl = document.getElementById('last-saved');
+  const featuredImageZone = document.getElementById('featured-image-zone');
+  const featuredImageInput = document.getElementById('featured-image-input');
+  const imagePreview = document.getElementById('image-preview');
+  const imagePreviewImg = document.getElementById('image-preview-img');
+  const imageRemove = document.getElementById('image-remove');
+  const mobileSidebarToggle = document.getElementById('mobile-sidebar-toggle');
+  const editorSidebar = document.getElementById('editor-sidebar');
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
+  const toast = document.getElementById('toast');
+  const autoSeoBtn = document.getElementById('auto-seo-btn');
+  const scanLinksBtn = document.getElementById('scan-links-btn');
+  const applyLinksBtn = document.getElementById('apply-links-btn');
+  const linksResultContainer = document.getElementById('links-result-container');
+  const linksEmptyState = document.getElementById('links-empty-state');
+  const linksCountNumber = document.getElementById('links-count-number');
+  const linksOpportunitiesList = document.getElementById('links-opportunities-list');
 
-        const textNodes = [];
-        const walker = document.createTreeWalker(
-          rootDiv,
-          NodeFilter.SHOW_TEXT,
-          {
-            acceptNode: function(node) {
-              const parent = node.parentElement;
-              if (!parent) return NodeFilter.FILTER_REJECT;
-              const tag = parent.tagName.toLowerCase();
-              if (['a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'code', 'pre', 'strong', 'em'].includes(tag)) {
-                return NodeFilter.FILTER_REJECT;
-              }
-              if (parent.closest('a')) return NodeFilter.FILTER_REJECT;
-              if (!node.textContent.trim()) return NodeFilter.FILTER_REJECT;
-              return NodeFilter.FILTER_ACCEPT;
-            }
-          }
-        );
+  let editingId = contentId;
+  let tags = [];
+  let featuredImage = null;
+  let autoSaveTimer;
+  let isSaving = false;
+  let scanResults = [];
 
-        let node;
-        while (node = walker.nextNode()) {
-          textNodes.push(node);
+  flatpickr(publishDateInput, { enableTime: true, dateFormat: "Y-m-d H:i", minDate: "today" });
+
+  if (editingId) loadContent(editingId);
+  else loadCurrentUser();
+
+  async function loadCurrentUser() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      const name = session.user.user_metadata?.full_name || session.user.email?.split('@')[0];
+      if (name && !authorInput.value) authorInput.value = name;
+    }
+  }
+
+  titleInput.addEventListener('input', () => {
+    if (!editingId || !slugInput.dataset.manual) {
+      slugInput.value = titleInput.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+    updateSEOPreview(); updateSEOScore();
+  });
+
+  slugInput.addEventListener('input', () => { slugInput.dataset.manual = 'true'; updateSEOPreview(); });
+  seoTitleInput.addEventListener('input', () => { updateCharCounter('seo-title-counter', seoTitleInput.value.length, 60); updateSEOPreview(); updateSEOScore(); });
+  excerptInput.addEventListener('input', () => { updateCharCounter('meta-desc-counter', excerptInput.value.length, 160); updateSEOPreview(); updateSEOScore(); });
+  seoKeywordsInput.addEventListener('input', () => { updateSEOScore(); });
+
+  statusSelect.addEventListener('change', () => {
+    publishDateGroup.style.display = statusSelect.value === 'scheduled' ? 'block' : 'none';
+  });
+
+  tagsInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      const tag = tagsInput.value.trim().replace(',', '');
+      if (tag && !tags.includes(tag)) { tags.push(tag); renderTags(); tagsInput.value = ''; updateSEOScore(); }
+    }
+  });
+
+  function renderTags() {
+    tagsContainer.querySelectorAll('.tag').forEach(t => t.remove());
+    tags.forEach((tag, index) => {
+      const tagEl = document.createElement('span');
+      tagEl.className = 'tag';
+      tagEl.innerHTML = `${tag}<span class="tag-remove" data-index="${index}">×</span>`;
+      tagsContainer.insertBefore(tagEl, tagsInput);
+    });
+    tagsContainer.querySelectorAll('.tag-remove').forEach(btn => {
+      btn.addEventListener('click', () => { tags.splice(parseInt(btn.dataset.index), 1); renderTags(); updateSEOScore(); });
+    });
+  }
+
+  featuredImageZone.addEventListener('click', () => featuredImageInput.click());
+  featuredImageZone.addEventListener('dragover', (e) => { e.preventDefault(); featuredImageZone.style.borderColor = 'var(--primary)'; });
+  featuredImageZone.addEventListener('dragleave', () => { featuredImageZone.style.borderColor = 'var(--border)'; });
+  featuredImageZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    featuredImageZone.style.borderColor = 'var(--border)';
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) handleImageUpload(file);
+  });
+  featuredImageInput.addEventListener('change', (e) => { const file = e.target.files[0]; if (file) handleImageUpload(file); });
+  imageRemove.addEventListener('click', () => {
+    featuredImage = null;
+    imagePreview.style.display = 'none';
+    featuredImageZone.style.display = 'block';
+    featuredImageZone.classList.remove('has-image');
+  });
+
+  function handleImageUpload(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      featuredImage = e.target.result;
+      imagePreviewImg.src = featuredImage;
+      imagePreview.style.display = 'block';
+      featuredImageZone.style.display = 'none';
+      featuredImageZone.classList.add('has-image');
+      updateSEOScore();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ============================================
+  // INTERNAL LINKING ENGINE (FIXED URL FORMAT)
+  // ============================================
+  scanLinksBtn.addEventListener('click', scanInternalLinks);
+  applyLinksBtn.addEventListener('click', applyInternalLinks);
+
+  async function scanInternalLinks() {
+    if (!tinymceReady || !editorInstance) { showToast('Editor not ready yet', 'error'); return; }
+    const content = editorInstance.getContent({ format: 'text' }).trim();
+    if (!content || content.length < 50) { showToast('Write more content first (at least 50 chars)', 'error'); return; }
+
+    scanLinksBtn.disabled = true;
+    scanLinksBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Scanning...';
+
+    try {
+      let query = supabase.from('articles').select('id, title, slug, tags, seo_keywords, category').eq('status', 'published');
+      if (editingId) query = query.neq('id', editingId);
+
+      const { data: articles, error } = await query.limit(200);
+      if (error) throw error;
+      if (!articles || articles.length === 0) { showToast('No published articles found to link to', 'error'); resetScanButton(); return; }
+
+      const candidates = [];
+      articles.forEach(article => {
+        // FIXED: No trailing slash in URLs
+        const articleUrl = `/article/${article.slug}`;
+        
+        if (article.title && article.title.trim()) {
+          candidates.push({ phrase: article.title.trim(), url: articleUrl, source: 'title', articleId: article.id, articleTitle: article.title });
         }
 
-        const foundOpportunities = [];
-        const usedPhrases = new Set();
-        const usedUrls = new Set();
-
-        for (const candidate of candidates) {
-          if (usedUrls.has(candidate.url)) continue;
-          if (usedPhrases.has(candidate.phrase.toLowerCase())) continue;
-          if (candidate.phrase.length < 3) continue;
-
-          const escaped = candidate.phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-          const regex = new RegExp(`\\b${escaped}\\b`, 'i');
-
-          for (const textNode of textNodes) {
-            const text = textNode.textContent;
-            const match = regex.exec(text);
-            if (match) {
-              foundOpportunities.push({
-                phrase: match[0],
-                originalPhrase: candidate.phrase,
-                url: candidate.url,
-                source: candidate.source,
-                articleTitle: candidate.articleTitle,
-                textNode: textNode,
-                matchIndex: match.index,
-                matchLength: match[0].length
-              });
-              usedPhrases.add(candidate.phrase.toLowerCase());
-              usedUrls.add(candidate.url);
-              break;
+        if (article.tags) {
+          let tagList = [];
+          if (typeof article.tags === 'string') {
+            try { tagList = JSON.parse(article.tags); }
+            catch { tagList = article.tags.split(',').map(t => t.trim()).filter(t => t); }
+          } else if (Array.isArray(article.tags)) tagList = article.tags;
+          
+          tagList.forEach(tag => {
+            if (tag && tag.trim().length > 2) {
+              candidates.push({ phrase: tag.trim(), url: articleUrl, source: 'tag', articleId: article.id, articleTitle: article.title });
             }
-          }
-
-          if (foundOpportunities.length >= 15) break;
+          });
         }
 
-        scanResults = foundOpportunities;
-        renderScanResults();
-
-      } catch (error) {
-        console.error('Scan error:', error);
-        showToast('Error scanning: ' + error.message, 'error');
-      } finally {
-        resetScanButton();
-      }
-    }
-
-    function resetScanButton() {
-      scanLinksBtn.disabled = false;
-      scanLinksBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Scan for Internal Links`;
-    }
-
-    function renderScanResults() {
-      if (scanResults.length === 0) {
-        linksResultContainer.style.display = 'none';
-        linksEmptyState.style.display = 'block';
-        linksEmptyState.textContent = 'No internal linking opportunities found. Try writing more content or publishing more articles.';
-        applyLinksBtn.disabled = true;
-        return;
-      }
-
-      linksEmptyState.style.display = 'none';
-      linksResultContainer.style.display = 'block';
-      linksCountNumber.textContent = scanResults.length;
-      applyLinksBtn.disabled = false;
-
-      linksOpportunitiesList.innerHTML = scanResults.map((op, idx) => `
-        <label class="link-opportunity">
-          <input type="checkbox" class="link-opportunity-checkbox" data-index="${idx}" checked>
-          <div class="link-opportunity-info">
-            <div class="link-opportunity-text">
-              Link "<code>${escapeHtml(op.phrase)}</code>"
-            </div>
-            <div class="link-opportunity-target">→ ${escapeHtml(op.articleTitle)}</div>
-          </div>
-        </label>
-      `).join('');
-
-      updateApplyButtonCount();
-
-      linksOpportunitiesList.querySelectorAll('.link-opportunity-checkbox').forEach(cb => {
-        cb.addEventListener('change', updateApplyButtonCount);
-      });
-    }
-
-    function updateApplyButtonCount() {
-      const checked = linksOpportunitiesList.querySelectorAll('.link-opportunity-checkbox:checked').length;
-      if (checked === 0) {
-        applyLinksBtn.disabled = true;
-        applyLinksBtn.innerHTML = 'No Links Selected';
-      } else {
-        applyLinksBtn.disabled = false;
-        applyLinksBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Apply ${checked} Link${checked > 1 ? 's' : ''}`;
-      }
-    }
-
-    function applyInternalLinks() {
-      if (!tinymceReady || !editorInstance) return;
-      if (scanResults.length === 0) return;
-
-      const selectedIndices = [];
-      linksOpportunitiesList.querySelectorAll('.link-opportunity-checkbox:checked').forEach(cb => {
-        selectedIndices.push(parseInt(cb.dataset.index));
+        if (article.seo_keywords) {
+          const keywords = article.seo_keywords.split(',').map(k => k.trim()).filter(k => k.length > 2);
+          keywords.forEach(keyword => {
+            candidates.push({ phrase: keyword, url: articleUrl, source: 'keyword', articleId: article.id, articleTitle: article.title });
+          });
+        }
       });
 
-      if (selectedIndices.length === 0) {
-        showToast('No links selected', 'error');
-        return;
-      }
+      candidates.sort((a, b) => b.phrase.length - a.phrase.length);
 
-      const toApply = selectedIndices.map(i => scanResults[i])
-        .sort((a, b) => b.matchIndex - a.matchIndex);
-
-      let html = editorInstance.getContent();
-
+      const html = editorInstance.getContent();
       const parser = new DOMParser();
       const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
       const rootDiv = doc.body.firstChild;
 
-      let applied = 0;
-
-      toApply.forEach(op => {
-        const textNode = op.textNode;
-        if (!textNode || !textNode.parentNode) return;
-
-        const text = textNode.textContent;
-        const matchIndex = text.indexOf(op.phrase);
-        if (matchIndex === -1) return;
-
-        const before = text.substring(0, matchIndex);
-        const match = text.substring(matchIndex, matchIndex + op.phrase.length);
-        const after = text.substring(matchIndex + op.phrase.length);
-
-        const link = document.createElement('a');
-        link.href = op.url;
-        link.textContent = match;
-        link.setAttribute('data-internal-link', 'true');
-
-        const parent = textNode.parentNode;
-        if (before) parent.insertBefore(document.createTextNode(before), textNode);
-        parent.insertBefore(link, textNode);
-        if (after) parent.insertBefore(document.createTextNode(after), textNode);
-        parent.removeChild(textNode);
-
-        applied++;
+      const textNodes = [];
+      const walker = document.createTreeWalker(rootDiv, NodeFilter.SHOW_TEXT, {
+        acceptNode: function(node) {
+          const parent = node.parentElement;
+          if (!parent) return NodeFilter.FILTER_REJECT;
+          const tag = parent.tagName.toLowerCase();
+          if (['a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'code', 'pre', 'strong', 'em'].includes(tag)) return NodeFilter.FILTER_REJECT;
+          if (parent.closest('a')) return NodeFilter.FILTER_REJECT;
+          if (!node.textContent.trim()) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
       });
 
-      editorInstance.setContent(rootDiv.innerHTML);
-      
-      showToast(`✓ Applied ${applied} internal link${applied > 1 ? 's' : ''}`, 'success');
-      
-      scanResults = [];
+      let node;
+      while (node = walker.nextNode()) textNodes.push(node);
+
+      const foundOpportunities = [];
+      const usedPhrases = new Set();
+      const usedUrls = new Set();
+
+      for (const candidate of candidates) {
+        if (usedUrls.has(candidate.url)) continue;
+        if (usedPhrases.has(candidate.phrase.toLowerCase())) continue;
+        if (candidate.phrase.length < 3) continue;
+
+        const escaped = candidate.phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`\\b${escaped}\\b`, 'i');
+
+        for (const textNode of textNodes) {
+          const text = textNode.textContent;
+          const match = regex.exec(text);
+          if (match) {
+            foundOpportunities.push({
+              phrase: match[0], originalPhrase: candidate.phrase, url: candidate.url,
+              source: candidate.source, articleTitle: candidate.articleTitle,
+              textNode: textNode, matchIndex: match.index, matchLength: match[0].length
+            });
+            usedPhrases.add(candidate.phrase.toLowerCase());
+            usedUrls.add(candidate.url);
+            break;
+          }
+        }
+        if (foundOpportunities.length >= 15) break;
+      }
+
+      scanResults = foundOpportunities;
+      renderScanResults();
+    } catch (error) {
+      console.error('Scan error:', error);
+      showToast('Error scanning: ' + error.message, 'error');
+    } finally { resetScanButton(); }
+  }
+
+  function resetScanButton() {
+    scanLinksBtn.disabled = false;
+    scanLinksBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Scan for Internal Links`;
+  }
+
+  function renderScanResults() {
+    if (scanResults.length === 0) {
       linksResultContainer.style.display = 'none';
       linksEmptyState.style.display = 'block';
-      linksEmptyState.textContent = `✓ ${applied} links applied successfully. Click "Scan" again to find more.`;
+      linksEmptyState.textContent = 'No internal linking opportunities found.';
+      applyLinksBtn.disabled = true;
+      return;
     }
 
-    // ============================================
-    // SMART SEO AUTO-GENERATION
-    // ============================================
-    autoSeoBtn.addEventListener('click', () => {
-      generateSmartSEO();
-      showToast('SEO metadata generated!', 'success');
+    linksEmptyState.style.display = 'none';
+    linksResultContainer.style.display = 'block';
+    linksCountNumber.textContent = scanResults.length;
+    applyLinksBtn.disabled = false;
+
+    linksOpportunitiesList.innerHTML = scanResults.map((op, idx) => `
+      <label class="link-opportunity">
+        <input type="checkbox" class="link-opportunity-checkbox" data-index="${idx}" checked>
+        <div class="link-opportunity-info">
+          <div class="link-opportunity-text">Link "<code>${escapeHtml(op.phrase)}</code>"</div>
+          <div class="link-opportunity-target">→ ${escapeHtml(op.articleTitle)}</div>
+        </div>
+      </label>
+    `).join('');
+
+    updateApplyButtonCount();
+    linksOpportunitiesList.querySelectorAll('.link-opportunity-checkbox').forEach(cb => {
+      cb.addEventListener('change', updateApplyButtonCount);
+    });
+  }
+
+  function updateApplyButtonCount() {
+    const checked = linksOpportunitiesList.querySelectorAll('.link-opportunity-checkbox:checked').length;
+    if (checked === 0) {
+      applyLinksBtn.disabled = true;
+      applyLinksBtn.innerHTML = 'No Links Selected';
+    } else {
+      applyLinksBtn.disabled = false;
+      applyLinksBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Apply ${checked} Link${checked > 1 ? 's' : ''}`;
+    }
+  }
+
+  function applyInternalLinks() {
+    if (!tinymceReady || !editorInstance || scanResults.length === 0) return;
+
+    const selectedIndices = [];
+    linksOpportunitiesList.querySelectorAll('.link-opportunity-checkbox:checked').forEach(cb => {
+      selectedIndices.push(parseInt(cb.dataset.index));
     });
 
-    function generateSmartSEO() {
-      const title = titleInput.value.trim();
-      const content = tinymceReady ? editorInstance.getContent({ format: 'text' }).trim() : '';
-      const category = document.getElementById('editor-category').value;
+    if (selectedIndices.length === 0) { showToast('No links selected', 'error'); return; }
 
-      if (title && !seoTitleInput.value) {
-        let seoTitle = title;
-        if (seoTitle.length > 60) {
-          seoTitle = seoTitle.substring(0, 57).trim() + '...';
+    const toApply = selectedIndices.map(i => scanResults[i]).sort((a, b) => b.matchIndex - a.matchIndex);
+    let html = editorInstance.getContent();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html');
+    const rootDiv = doc.body.firstChild;
+    let applied = 0;
+
+    toApply.forEach(op => {
+      const textNode = op.textNode;
+      if (!textNode || !textNode.parentNode) return;
+      const text = textNode.textContent;
+      const matchIndex = text.indexOf(op.phrase);
+      if (matchIndex === -1) return;
+
+      const before = text.substring(0, matchIndex);
+      const match = text.substring(matchIndex, matchIndex + op.phrase.length);
+      const after = text.substring(matchIndex + op.phrase.length);
+
+      const link = document.createElement('a');
+      link.href = op.url;
+      link.textContent = match;
+      link.setAttribute('data-internal-link', 'true');
+
+      const parent = textNode.parentNode;
+      if (before) parent.insertBefore(document.createTextNode(before), textNode);
+      parent.insertBefore(link, textNode);
+      if (after) parent.insertBefore(document.createTextNode(after), textNode);
+      parent.removeChild(textNode);
+      applied++;
+    });
+
+    editorInstance.setContent(rootDiv.innerHTML);
+    showToast(`✓ Applied ${applied} internal link${applied > 1 ? 's' : ''}`, 'success');
+    scanResults = [];
+    linksResultContainer.style.display = 'none';
+    linksEmptyState.style.display = 'block';
+    linksEmptyState.textContent = `✓ ${applied} links applied successfully. Click "Scan" again to find more.`;
+  }
+
+  // ============================================
+  // SMART SEO AUTO-GENERATION
+  // ============================================
+  autoSeoBtn.addEventListener('click', () => { generateSmartSEO(); showToast('SEO metadata generated!', 'success'); });
+
+  function generateSmartSEO() {
+    const title = titleInput.value.trim();
+    const content = tinymceReady ? editorInstance.getContent({ format: 'text' }).trim() : '';
+    const category = document.getElementById('editor-category').value;
+
+    if (title && !seoTitleInput.value) {
+      let seoTitle = title;
+      if (seoTitle.length > 60) seoTitle = seoTitle.substring(0, 57).trim() + '...';
+      if (category && seoTitle.length + category.length + 3 < 60) seoTitle = `${seoTitle} | ${capitalizeFirst(category)}`;
+      seoTitleInput.value = seoTitle;
+      updateCharCounter('seo-title-counter', seoTitle.length, 60);
+    }
+
+    if (!excerptInput.value && content.length > 50) {
+      const description = generateMetaDescription(content, 155);
+      excerptInput.value = description;
+      updateCharCounter('meta-desc-counter', description.length, 160);
+    }
+
+    if (!seoKeywordsInput.value && content.length > 50) {
+      const keywords = extractKeywords(content, title, 5);
+      seoKeywordsInput.value = keywords.join(', ');
+    }
+
+    if (tags.length === 0 && content.length > 50) {
+      tags = extractKeywords(content, title, 5).slice(0, 5);
+      renderTags();
+    }
+
+    updateSEOPreview(); updateSEOScore();
+  }
+
+  function generateMetaDescription(content, maxLength = 155) {
+    const cleanContent = content.replace(/\s+/g, ' ').trim();
+    if (cleanContent.length <= maxLength) return cleanContent;
+    let description = cleanContent.substring(0, maxLength);
+    const lastSentence = description.lastIndexOf('.');
+    const lastComma = description.lastIndexOf(',');
+    const lastSpace = description.lastIndexOf(' ');
+    if (lastSentence > maxLength * 0.6) description = description.substring(0, lastSentence + 1);
+    else if (lastComma > maxLength * 0.6) description = description.substring(0, lastComma) + '...';
+    else if (lastSpace > maxLength * 0.6) description = description.substring(0, lastSpace) + '...';
+    else description = description + '...';
+    return description;
+  }
+
+  function extractKeywords(content, title, maxKeywords = 5) {
+    const text = (title + ' ' + content).toLowerCase();
+    const stopWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'can', 'this', 'that', 'these', 'those', 'i', 'you', 'he', 'she', 'it', 'we', 'they', 'me', 'him', 'her', 'us', 'them', 'my', 'your', 'his', 'its', 'our', 'their', 'what', 'which', 'who', 'whom', 'when', 'where', 'why', 'how', 'not', 'no', 'nor', 'as', 'if', 'then', 'than', 'too', 'very', 'just', 'about', 'above', 'after', 'again', 'all', 'also', 'am', 'any', 'because', 'before', 'between', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'only', 'own', 'same', 'so', 'into', 'over', 'under', 'up', 'down', 'out', 'off']);
+    const words = text.match(/\b[a-z]{4,}\b/g) || [];
+    const wordCount = {};
+    words.forEach(word => { if (!stopWords.has(word)) wordCount[word] = (wordCount[word] || 0) + 1; });
+    const sorted = Object.entries(wordCount).sort((a, b) => b[1] - a[1]).slice(0, maxKeywords).map(([word]) => word);
+    const titleWords = title.toLowerCase().match(/\b[a-z]{4,}\b/g) || [];
+    titleWords.forEach(word => { if (!stopWords.has(word) && !sorted.includes(word) && sorted.length < maxKeywords) sorted.unshift(word); });
+    return sorted.slice(0, maxKeywords);
+  }
+
+  function capitalizeFirst(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
+
+  // ============================================
+  // SEO SCORE CALCULATOR
+  // ============================================
+  function updateSEOScore() {
+    let score = 0;
+    const title = titleInput.value.trim();
+    const seoTitle = seoTitleInput.value.trim();
+    const metaDesc = excerptInput.value.trim();
+    const slug = slugInput.value.trim();
+    const keywords = seoKeywordsInput.value.trim();
+    const content = tinymceReady ? editorInstance.getContent({ format: 'text' }).trim() : '';
+    const category = document.getElementById('editor-category').value;
+
+    if (title.length > 0) score += 15;
+    if (seoTitle.length >= 30 && seoTitle.length <= 60) score += 15;
+    else if (seoTitle.length > 0) score += 8;
+    if (metaDesc.length >= 120 && metaDesc.length <= 160) score += 20;
+    else if (metaDesc.length > 50) score += 10;
+    if (slug.length > 0 && slug.length < 60) score += 10;
+    if (keywords.length > 0) score += 10;
+    if (tags.length >= 3) score += 10;
+    else if (tags.length > 0) score += 5;
+    if (featuredImage) score += 10;
+    if (category) score += 5;
+
+    const wordCount = content.split(/\s+/).filter(w => w.length > 0).length;
+    if (wordCount >= 300) score += 5;
+    else if (wordCount >= 100) score += 3;
+
+    if (tinymceReady) {
+      const html = editorInstance.getContent();
+      const internalLinks = (html.match(/data-internal-link="true"/g) || []).length;
+      if (internalLinks >= 3) score += 5;
+      else if (internalLinks >= 1) score += 2;
+    }
+
+    const scoreCircle = document.getElementById('seo-score-circle');
+    const scoreText = document.getElementById('seo-score-text');
+    scoreCircle.textContent = Math.min(score, 100);
+    scoreCircle.className = 'seo-score-circle';
+
+    if (score >= 80) { scoreCircle.classList.add('excellent'); scoreText.textContent = 'Excellent!'; }
+    else if (score >= 60) { scoreCircle.classList.add('good'); scoreText.textContent = 'Good'; }
+    else if (score >= 40) { scoreCircle.classList.add('fair'); scoreText.textContent = 'Needs improvement'; }
+    else { scoreCircle.classList.add('poor'); scoreText.textContent = 'Poor'; }
+  }
+
+  function updateCharCounter(elementId, current, max) {
+    const counter = document.getElementById(elementId);
+    if (!counter) return;
+    counter.textContent = `${current}/${max}`;
+    counter.className = 'char-counter';
+    if (current > max) counter.classList.add('danger');
+    else if (current > max * 0.9) counter.classList.add('warning');
+    else if (current >= max * 0.7) counter.classList.add('success');
+  }
+
+  function updateSEOPreview() {
+    const title = seoTitleInput.value || titleInput.value || 'Page Title';
+    const description = excerptInput.value || 'Meta description will appear here...';
+    const slug = slugInput.value || 'post-url';
+    document.getElementById('seo-title-preview').textContent = title;
+    document.getElementById('seo-description-preview').textContent = description;
+    document.getElementById('seo-slug').textContent = slug;
+  }
+
+  function updateStats() {
+    if (!tinymceReady || !editorInstance) return;
+    const text = editorInstance.getContent({ format: 'text' });
+    const wordCount = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+    wordCountEl.textContent = wordCount;
+    charCountEl.textContent = text.length;
+    readingTimeEl.textContent = `${Math.ceil(wordCount / 200)} min read`;
+  }
+
+  function scheduleAutoSave() {
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => { if (!isSaving) saveContent(true, null, false); }, 30000);
+  }
+
+  saveDraftBtn.addEventListener('click', () => saveContent(false, null, true));
+  publishBtn.addEventListener('click', handlePublishClick);
+
+  async function handlePublishClick() {
+    const { errors, warnings } = await validateForPublish();
+    if (errors.length > 0 || warnings.length > 0) {
+      showValidationModal(errors, warnings);
+      if (errors.length > 0) return;
+    }
+    await publishArticle();
+  }
+
+  // ============================================
+  // SAVE CONTENT - FIXED COLUMN MAPPING
+  // ============================================
+  async function saveContent(isAuto = false, statusOverride = null, showToastOnSuccess = true) {
+    if (isSaving) return;
+    if (!titleInput.value.trim()) { showToast('Please enter a title', 'error'); return; }
+    if (!slugInput.value.trim()) { showToast('Please enter a URL slug', 'error'); return; }
+    
+    isSaving = true;
+    const currentStatus = statusOverride || statusSelect.value;
+    const slug = slugInput.value.trim();
+    
+    try {
+      // FIXED: Map to correct DB columns
+      const payload = {
+        title: titleInput.value.trim(),
+        slug: slug,
+        description: tinymceReady ? editorInstance.getContent() : '',  // DB uses 'description' not 'content'
+        excerpt: excerptInput.value.trim(),
+        cover_image: featuredImage,  // DB uses 'cover_image' not 'featured_image'
+        author: authorInput.value.trim(),
+        tags: tags,
+        status: currentStatus,
+        type: typeSelect.value,
+        category: document.getElementById('editor-category').value,
+        seo_title: seoTitleInput.value.trim(),
+        seo_description: excerptInput.value.trim(),
+        seo_keywords: seoKeywordsInput.value.trim(),
+        html_path: `/article/${slug}`,  // REQUIRED by DB
+        updated_at: new Date().toISOString(),
+        published_at: currentStatus === 'published' ? new Date().toISOString() : null
+      };
+
+      if (statusSelect.value === 'scheduled' && publishDateInput.value) {
+        payload.published_at = publishDateInput.value;
+      }
+
+      let result;
+      if (editingId) {
+        result = await supabase.from('articles').update(payload).eq('id', editingId).select().single();
+      } else {
+        payload.created_at = new Date().toISOString();
+        result = await supabase.from('articles').insert([payload]).select().single();
+        if (result.data) {
+          editingId = result.data.id;
+          window.history.replaceState({}, '', `?id=${editingId}`);
         }
-        if (category && seoTitle.length + category.length + 3 < 60) {
-          seoTitle = `${seoTitle} | ${capitalizeFirst(category)}`;
+      }
+
+      if (result.error) throw new Error(result.error.message);
+
+      lastSavedEl.textContent = `Last saved: ${new Date().toLocaleTimeString()}`;
+      if (!isAuto && showToastOnSuccess) showToast('Content saved successfully!', 'success');
+    } catch (error) {
+      console.error('Save error:', error);
+      if (!isAuto) showToast(`Error: ${error.message}`, 'error');
+    } finally {
+      isSaving = false;
+    }
+  }
+
+  // ============================================
+  // PUBLISHING VALIDATION
+  // ============================================
+  async function validateForPublish() {
+    const errors = [];
+    const warnings = [];
+
+    const { data: slugExists } = await supabase.from('articles').select('id').eq('slug', slugInput.value.trim()).neq('id', editingId || '00000000-0000-0000-0000-000000000000').maybeSingle();
+    if (slugExists) errors.push('Slug is already in use.');
+
+    const { data: titleExists } = await supabase.from('articles').select('id').ilike('title', titleInput.value.trim()).neq('id', editingId || '00000000-0000-0000-0000-000000000000').maybeSingle();
+    if (titleExists) warnings.push('An article with a similar title already exists.');
+
+    if (!seoTitleInput.value.trim()) errors.push('SEO Title is missing.');
+    if (!excerptInput.value.trim()) errors.push('Meta Description is missing.');
+    if (!document.getElementById('editor-category').value) errors.push('Category is not selected.');
+    if (!authorInput.value.trim()) errors.push('Author name is missing.');
+
+    const content = tinymceReady ? editorInstance.getContent({ format: 'text' }).trim() : '';
+    const wordCount = content.split(/\s+/).filter(w => w.length > 0).length;
+    if (wordCount < 300) errors.push(`Content is too short (${wordCount} words). Minimum 300 recommended.`);
+
+    if (!slugInput.value.trim() || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slugInput.value.trim())) {
+      errors.push('Invalid URL slug format.');
+    }
+
+    return { errors, warnings };
+  }
+
+  function showValidationModal(errors, warnings) {
+    const modal = document.getElementById('validation-modal');
+    const errorList = document.getElementById('validation-errors');
+    errorList.innerHTML = '';
+    errors.forEach(err => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span>❌</span> ${err}`;
+      errorList.appendChild(li);
+    });
+    warnings.forEach(warn => {
+      const li = document.createElement('li');
+      li.className = 'warning';
+      li.innerHTML = `<span>⚠️</span> ${warn}`;
+      errorList.appendChild(li);
+    });
+    modal.classList.add('show');
+  }
+
+  // ============================================
+  // LOAD CONTENT - FIXED COLUMN MAPPING
+  // ============================================
+  async function loadContent(id) {
+    try {
+      console.log('Loading article:', id);
+      const { data, error } = await supabase.from('articles').select('*').eq('id', id).single();
+      
+      if (error) { console.error('Supabase error:', error); showToast('Error loading: ' + error.message, 'error'); return; }
+      if (!data) { showToast('Article not found', 'error'); return; }
+
+      console.log('Article loaded:', data.title);
+
+      titleInput.value = data.title || '';
+      slugInput.value = data.slug || '';
+      slugInput.dataset.manual = 'true';
+      typeSelect.value = data.type || 'post';
+      statusSelect.value = data.status || 'draft';
+      authorInput.value = data.author || '';
+      
+      // FIXED: Read from correct DB columns
+      excerptInput.value = data.seo_description || data.excerpt || '';
+      seoTitleInput.value = data.seo_title || '';
+      seoKeywordsInput.value = data.seo_keywords || '';
+      
+      // FIXED: Read content from 'description' column
+      const contentToLoad = data.description || data.content || '';
+      
+      const waitForEditor = setInterval(() => {
+        if (tinymceReady && editorInstance) {
+          clearInterval(waitForEditor);
+          editorInstance.setContent(contentToLoad);
+          updateStats();
         }
-        seoTitleInput.value = seoTitle;
-        updateCharCounter('seo-title-counter', seoTitle.length, 60);
-      }
-
-      if (!excerptInput.value && content.length > 50) {
-        const description = generateMetaDescription(content, 155);
-        excerptInput.value = description;
-        updateCharCounter('meta-desc-counter', description.length, 160);
-      }
-
-      if (!seoKeywordsInput.value && content.length > 50) {
-        const keywords = extractKeywords(content, title, 5);
-        seoKeywordsInput.value = keywords.join(', ');
-      }
-
-      if (tags.length === 0 && content.length > 50) {
-        const autoTags = extractKeywords(content, title, 5);
-        tags = autoTags.slice(0, 5);
+      }, 100);
+      
+      setTimeout(() => {
+        clearInterval(waitForEditor);
+        if (!tinymceReady && editorInstance) editorInstance.setContent(contentToLoad);
+      }, 5000);
+      
+      // Load tags
+      if (data.tags) {
+        if (typeof data.tags === 'string') {
+          try { tags = JSON.parse(data.tags); }
+          catch { tags = data.tags.split(',').map(t => t.trim()).filter(t => t); }
+        } else if (Array.isArray(data.tags)) tags = data.tags;
         renderTags();
       }
+      
+      if (data.category) document.getElementById('editor-category').value = data.category;
 
+      // FIXED: Load image from 'cover_image' column
+      const savedImage = data.cover_image || data.featured_image;
+      if (savedImage) {
+        featuredImage = savedImage;
+        imagePreviewImg.src = featuredImage;
+        imagePreview.style.display = 'block';
+        featuredImageZone.style.display = 'none';
+        featuredImageZone.classList.add('has-image');
+      }
+
+      if (data.published_at) {
+        publishDateInput.value = data.published_at;
+        publishDateGroup.style.display = 'block';
+      }
+
+      updateCharCounter('seo-title-counter', seoTitleInput.value.length, 60);
+      updateCharCounter('meta-desc-counter', excerptInput.value.length, 160);
       updateSEOPreview();
       updateSEOScore();
-    }
-
-    function generateMetaDescription(content, maxLength = 155) {
-      const cleanContent = content.replace(/\s+/g, ' ').trim();
-      if (cleanContent.length <= maxLength) return cleanContent;
-
-      let description = cleanContent.substring(0, maxLength);
-      const lastSentence = description.lastIndexOf('.');
-      const lastComma = description.lastIndexOf(',');
-      const lastSpace = description.lastIndexOf(' ');
       
-      if (lastSentence > maxLength * 0.6) {
-        description = description.substring(0, lastSentence + 1);
-      } else if (lastComma > maxLength * 0.6) {
-        description = description.substring(0, lastComma) + '...';
-      } else if (lastSpace > maxLength * 0.6) {
-        description = description.substring(0, lastSpace) + '...';
-      } else {
-        description = description + '...';
-      }
+      if (data.updated_at) lastSavedEl.textContent = `Last saved: ${new Date(data.updated_at).toLocaleTimeString()}`;
+    } catch (error) {
+      console.error('Load content error:', error);
+      showToast('Error loading content', 'error');
+    }
+  }
 
-      return description;
+  // ============================================
+  // PUBLISH ARTICLE
+  // ============================================
+  async function publishArticle() {
+    const modal = document.getElementById('progress-modal');
+    const list = document.getElementById('progress-list');
+    list.innerHTML = '';
+    modal.classList.add('show');
+    
+    function addStep(text, status = 'saving') {
+      const li = document.createElement('li');
+      li.className = status;
+      li.innerHTML = `<span>${status === 'success' ? '✓' : status === 'error' ? '✗' : '⏳'}</span> ${text}`;
+      list.appendChild(li);
+      return li;
     }
 
-    function extractKeywords(content, title, maxKeywords = 5) {
-      const text = (title + ' ' + content).toLowerCase();
-      const stopWords = new Set([
-        'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
-        'of', 'with', 'by', 'from', 'is', 'are', 'was', 'were', 'be', 'been',
-        'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would',
-        'could', 'should', 'may', 'might', 'can', 'this', 'that', 'these',
-        'those', 'i', 'you', 'he', 'she', 'it', 'we', 'they', 'me', 'him',
-        'her', 'us', 'them', 'my', 'your', 'his', 'its', 'our', 'their',
-        'what', 'which', 'who', 'whom', 'when', 'where', 'why', 'how',
-        'not', 'no', 'nor', 'as', 'if', 'then', 'than', 'too', 'very',
-        'just', 'about', 'above', 'after', 'again', 'all', 'also', 'am',
-        'any', 'because', 'before', 'between', 'both', 'each', 'few',
-        'more', 'most', 'other', 'some', 'such', 'only', 'own', 'same',
-        'so', 'into', 'over', 'under', 'up', 'down', 'out', 'off'
-      ]);
+    try {
+      let step0 = addStep('Validating article...', 'saving');
+      const { data: slugExists } = await supabase.from('articles').select('id').eq('slug', slugInput.value.trim()).neq('id', editingId || '00000000-0000-0000-0000-000000000000').maybeSingle();
+      if (slugExists) throw new Error('Slug is already in use');
+      step0.className = 'success';
+      step0.innerHTML = '<span>✓</span> Validation passed';
 
-      const words = text.match(/\b[a-z]{4,}\b/g) || [];
-      const wordCount = {};
-      words.forEach(word => {
-        if (!stopWords.has(word)) {
-          wordCount[word] = (wordCount[word] || 0) + 1;
-        }
-      });
+      let step1 = addStep('Publishing article...', 'saving');
+      await saveContent(false, 'published', false);
+      step1.className = 'success';
+      step1.innerHTML = '<span>✓</span> Article published successfully';
 
-      const sorted = Object.entries(wordCount)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, maxKeywords)
-        .map(([word]) => word);
-
-      const titleWords = title.toLowerCase().match(/\b[a-z]{4,}\b/g) || [];
-      titleWords.forEach(word => {
-        if (!stopWords.has(word) && !sorted.includes(word) && sorted.length < maxKeywords) {
-          sorted.unshift(word);
-        }
-      });
-
-      return sorted.slice(0, maxKeywords);
-    }
-
-    function capitalizeFirst(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
-    // ============================================
-    // SEO SCORE CALCULATOR
-    // ============================================
-    function updateSEOScore() {
-      let score = 0;
-      const title = titleInput.value.trim();
-      const seoTitle = seoTitleInput.value.trim();
-      const metaDesc = excerptInput.value.trim();
-      const slug = slugInput.value.trim();
-      const keywords = seoKeywordsInput.value.trim();
-      const content = tinymceReady ? editorInstance.getContent({ format: 'text' }).trim() : '';
-      const category = document.getElementById('editor-category').value;
-
-      if (title.length > 0) score += 15;
-      if (seoTitle.length >= 30 && seoTitle.length <= 60) score += 15;
-      else if (seoTitle.length > 0) score += 8;
-      if (metaDesc.length >= 120 && metaDesc.length <= 160) score += 20;
-      else if (metaDesc.length > 50) score += 10;
-      if (slug.length > 0 && slug.length < 60) score += 10;
-      if (keywords.length > 0) score += 10;
-      if (tags.length >= 3) score += 10;
-      else if (tags.length > 0) score += 5;
-      if (featuredImage) score += 10;
-      if (category) score += 5;
-
-      const wordCount = content.split(/\s+/).filter(w => w.length > 0).length;
-      if (wordCount >= 300) score += 5;
-      else if (wordCount >= 100) score += 3;
-
-      if (tinymceReady) {
-        const html = editorInstance.getContent();
-        const internalLinks = (html.match(/data-internal-link="true"/g) || []).length;
-        if (internalLinks >= 3) score += 5;
-        else if (internalLinks >= 1) score += 2;
-      }
-
-      const scoreCircle = document.getElementById('seo-score-circle');
-      const scoreText = document.getElementById('seo-score-text');
+      addStep('Article is now live!', 'success');
       
-      scoreCircle.textContent = Math.min(score, 100);
-      scoreCircle.className = 'seo-score-circle';
-
-      if (score >= 80) { scoreCircle.classList.add('excellent'); scoreText.textContent = 'Excellent!'; }
-      else if (score >= 60) { scoreCircle.classList.add('good'); scoreText.textContent = 'Good'; }
-      else if (score >= 40) { scoreCircle.classList.add('fair'); scoreText.textContent = 'Needs improvement'; }
-      else { scoreCircle.classList.add('poor'); scoreText.textContent = 'Poor'; }
+      setTimeout(() => {
+        modal.classList.remove('show');
+        showToast('Article published successfully!', 'success');
+      }, 1500);
+    } catch (error) {
+      console.error(error);
+      addStep(`Error: ${error.message}`, 'error');
     }
+  }
 
-    function updateCharCounter(elementId, current, max) {
-      const counter = document.getElementById(elementId);
-      if (!counter) return;
-      counter.textContent = `${current}/${max}`;
-      counter.className = 'char-counter';
-      if (current > max) counter.classList.add('danger');
-      else if (current > max * 0.9) counter.classList.add('warning');
-      else if (current >= max * 0.7) counter.classList.add('success');
-    }
+  mobileSidebarToggle.addEventListener('click', () => { editorSidebar.classList.add('open'); sidebarOverlay.classList.add('open'); });
+  sidebarOverlay.addEventListener('click', () => { editorSidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); });
 
-    function updateSEOPreview() {
-      const title = seoTitleInput.value || titleInput.value || 'Page Title';
-      const description = excerptInput.value || 'Meta description will appear here...';
-      const slug = slugInput.value || 'post-url';
+  function showToast(message, type = 'info') {
+    toast.textContent = message;
+    toast.className = `toast show ${type}`;
+    setTimeout(() => { toast.classList.remove('show'); }, 4000);
+  }
 
-      document.getElementById('seo-title-preview').textContent = title;
-      document.getElementById('seo-description-preview').textContent = description;
-      document.getElementById('seo-slug').textContent = slug;
-    }
+  function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
 
-    function updateStats() {
-      if (!tinymceReady || !editorInstance) return;
-      const text = editorInstance.getContent({ format: 'text' });
-      const wordCount = text.trim().split(/\s+/).filter(w => w.length > 0).length;
-      const charCount = text.length;
-      const readingTime = Math.ceil(wordCount / 200);
-
-      wordCountEl.textContent = wordCount;
-      charCountEl.textContent = charCount;
-      readingTimeEl.textContent = `${readingTime} min read`;
-    }
-
-    function scheduleAutoSave() {
-      clearTimeout(autoSaveTimer);
-      autoSaveTimer = setTimeout(() => {
-        if (!isSaving) saveContent(true, null, false);
-      }, 30000);
-    }
-
-    saveDraftBtn.addEventListener('click', () => saveContent(false, null, true));
-    publishBtn.addEventListener('click', handlePublishClick);
-
-    async function handlePublishClick() {
-      const { errors, warnings } = await validateForPublish();
-      
-      if (errors.length > 0 || warnings.length > 0) {
-        showValidationModal(errors, warnings);
-        if (errors.length > 0) return;
-      }
-      
-      await publishArticle();
-    }
-
-    async function saveContent(isAuto = false, statusOverride = null, showToastOnSuccess = true) {
-      if (isSaving) return;
-      
-      if (!titleInput.value.trim()) {
-        showToast('Please enter a title', 'error');
-        return;
-      }
-
-      if (!slugInput.value.trim()) {
-        showToast('Please enter a URL slug', 'error');
-        return;
-      }
-      
-      isSaving = true;
-      
-      try {
-        const payload = {
-          title: titleInput.value.trim(),
-          slug: slugInput.value.trim(),
-          type: typeSelect.value,
-          status: statusOverride || statusSelect.value,
-          excerpt: excerptInput.value.trim(),
-          body: tinymceReady ? editorInstance.getContent() : '',
-          tags: tags,
-          featured_image: featuredImage,
-          category: document.getElementById('editor-category').value,
-          author: authorInput.value.trim(),
-          seo_title: seoTitleInput.value.trim(),
-          seo_keywords: seoKeywordsInput.value.trim(),
-          updated_at: new Date().toISOString()
-        };
-
-        if (statusSelect.value === 'scheduled' && publishDateInput.value) {
-          payload.publish_date = publishDateInput.value;
-        }
-
-        let result;
-        if (editingId) {
-          result = await supabase.from('content').update(payload).eq('id', editingId);
-        } else {
-          payload.created_at = new Date().toISOString();
-          result = await supabase.from('content').insert([payload]);
-          if (result.data) {
-            editingId = result.data[0].id;
-            window.history.replaceState({}, '', `?id=${editingId}`);
-          }
-        }
-
-        if (result.error) throw new Error(result.error.message);
-
-        const now = new Date();
-        lastSavedEl.textContent = `Last saved: ${now.toLocaleTimeString()}`;
-        
-        if (!isAuto && showToastOnSuccess) showToast('Content saved successfully!', 'success');
-      } catch (error) {
-        console.error('Save error:', error);
-        if (!isAuto) showToast(`Error: ${error.message}`, 'error');
-      } finally {
-        isSaving = false;
-      }
-    }
-
-    // ============================================
-    // PUBLISHING VALIDATION & PIPELINE
-    // ============================================
-    async function validateForPublish() {
-      const errors = [];
-      const warnings = [];
-
-      // 1. Unique slug
-      const { data: slugExists } = await supabase
-        .from('content')
-        .select('id')
-        .eq('slug', slugInput.value.trim())
-        .neq('id', editingId || '00000000-0000-0000-0000-000000000000')
-        .maybeSingle();
-      if (slugExists) errors.push('Slug is already in use. Please choose a unique URL slug.');
-
-      // 2. Duplicate title
-      const { data: titleExists } = await supabase
-        .from('content')
-        .select('id')
-        .ilike('title', titleInput.value.trim())
-        .neq('id', editingId || '00000000-0000-0000-0000-000000000000')
-        .maybeSingle();
-      if (titleExists) warnings.push('An article with a similar title already exists.');
-
-      // 3. SEO title present
-      if (!seoTitleInput.value.trim()) errors.push('SEO Title is missing.');
-
-      // 4. Meta description present
-      if (!excerptInput.value.trim()) errors.push('Meta Description is missing.');
-
-      // 5. Featured image exists
-      if (!featuredImage) errors.push('Featured Image is required for social sharing and SEO.');
-
-      // 6. Category selected
-      if (!document.getElementById('editor-category').value) errors.push('Category is not selected.');
-
-      // 7. Author selected
-      if (!authorInput.value.trim()) errors.push('Author name is missing.');
-
-      // 8. Minimum content length
-      const content = tinymceReady ? editorInstance.getContent({ format: 'text' }).trim() : '';
-      const wordCount = content.split(/\s+/).filter(w => w.length > 0).length;
-      if (wordCount < 300) errors.push(`Content is too short (${wordCount} words). Minimum 300 words recommended for SEO.`);
-
-      // 9. Valid canonical URL (slug format)
-      if (!slugInput.value.trim() || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slugInput.value.trim())) {
-        errors.push('Invalid URL slug format. Use lowercase letters, numbers, and hyphens only.');
-      }
-
-      // 10. Valid schema (check if category is present for breadcrumb)
-      if (!document.getElementById('editor-category').value) {
-        errors.push('Cannot generate valid Breadcrumb schema without a category.');
-      }
-
-      return { errors, warnings };
-    }
-
-    function showValidationModal(errors, warnings) {
-      const modal = document.getElementById('validation-modal');
-      const errorList = document.getElementById('validation-errors');
-      errorList.innerHTML = '';
-      
-      errors.forEach(err => {
-        const li = document.createElement('li');
-        li.innerHTML = `<span>❌</span> ${err}`;
-        errorList.appendChild(li);
-      });
-      
-      warnings.forEach(warn => {
-        const li = document.createElement('li');
-        li.className = 'warning';
-        li.innerHTML = `<span>⚠️</span> ${warn}`;
-        errorList.appendChild(li);
-      });
-      
-      modal.classList.add('show');
-    }
-
-
-    async function loadContent(id) {
-      try {
-        console.log('Loading article:', id);
-        const { data, error } = await supabase.from('content').select('*').eq('id', id).single();
-        
-        if (error) {
-          console.error('Supabase error:', error);
-          showToast('Error loading content: ' + error.message, 'error');
-          return;
-        }
-
-        if (!data) {
-          showToast('Article not found', 'error');
-          return;
-        }
-
-        console.log('Article loaded:', data.title);
-
-        // Populate form fields
-        titleInput.value = data.title || '';
-        slugInput.value = data.slug || '';
-        slugInput.dataset.manual = 'true';
-        typeSelect.value = data.type || 'post';
-        statusSelect.value = data.status || 'draft';
-        authorInput.value = data.author || '';
-        excerptInput.value = data.excerpt || '';
-        seoTitleInput.value = data.seo_title || '';
-        seoKeywordsInput.value = data.seo_keywords || '';
-        
-        // Wait for TinyMCE to be ready, then set content
-        const waitForEditor = setInterval(() => {
-          if (tinymceReady && editorInstance) {
-            clearInterval(waitForEditor);
-            editorInstance.setContent(data.body || '');
-            updateStats();
-          }
-        }, 100);
-        
-        // Timeout after 5 seconds
-        setTimeout(() => {
-          clearInterval(waitForEditor);
-          if (!tinymceReady && editorInstance) {
-            editorInstance.setContent(data.body || '');
-          }
-        }, 5000);
-        
-        // Load tags
-        if (data.tags) {
-          if (typeof data.tags === 'string') {
-            try { tags = JSON.parse(data.tags); }
-            catch { tags = data.tags.split(',').map(t => t.trim()).filter(t => t); }
-          } else if (Array.isArray(data.tags)) {
-            tags = data.tags;
-          }
-          renderTags();
-        }
-        
-        // Load category
-        if (data.category) {
-          document.getElementById('editor-category').value = data.category;
-        }
-
-        // Load featured image
-        if (data.featured_image) {
-          featuredImage = data.featured_image;
-          imagePreviewImg.src = featuredImage;
-          imagePreview.style.display = 'block';
-          featuredImageZone.style.display = 'none';
-          featuredImageZone.classList.add('has-image');
-        }
-
-        // Load publish date
-        if (data.publish_date) {
-          publishDateInput.value = data.publish_date;
-          publishDateGroup.style.display = 'block';
-        }
-
-        // Update counters and previews
-        updateCharCounter('seo-title-counter', seoTitleInput.value.length, 60);
-        updateCharCounter('meta-desc-counter', excerptInput.value.length, 160);
-        updateSEOPreview();
-        updateSEOScore();
-        
-        if (data.updated_at) {
-          const updated = new Date(data.updated_at);
-          lastSavedEl.textContent = `Last saved: ${updated.toLocaleTimeString()}`;
-        }
-      } catch (error) {
-        console.error('Load content error:', error);
-        showToast('Error loading content', 'error');
-      }
-    }
-
-
-
-    // ============================================
-    // NEW BACKEND PUBLISHING FUNCTION
-    // ============================================
-    async function publishArticle() {
-  const modal = document.getElementById('progress-modal');
-  const list = document.getElementById('progress-list');
-  list.innerHTML = '';
-  modal.classList.add('show');
+  let hasChanges = false;
+  titleInput.addEventListener('input', () => { hasChanges = true; });
   
-  function addStep(text, status = 'saving') {
-    const li = document.createElement('li');
-    li.className = status;
-    li.innerHTML = `<span>${status === 'success' ? '✓' : status === 'error' ? '✗' : '⏳'}</span> ${text}`;
-    list.appendChild(li);
-    return li;
-  }
+  window.addEventListener('beforeunload', (e) => {
+    if (hasChanges && !isSaving) { e.preventDefault(); e.returnValue = ''; }
+  });
 
-  try {
-    // 1. Validate
-    let step0 = addStep('Validating article...', 'saving');
-    const { data: slugExists } = await supabase
-      .from('content')
-      .select('id')
-      .eq('slug', slugInput.value.trim())
-      .neq('id', editingId || '00000000-0000-0000-0000-000000000000')
-      .maybeSingle();
-    
-    if (slugExists) {
-      throw new Error('Slug is already in use');
-    }
-    step0.className = 'success';
-    step0.innerHTML = '<span>✓</span> Validation passed';
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); saveContent(false, null, true); }
+  });
 
-    // 2. Save with published status
-    let step1 = addStep('Publishing article...', 'saving');
-    await saveContent(false, 'published', false);
-    step1.className = 'success';
-    step1.innerHTML = '<span>✓</span> Article published successfully';
+  const style = document.createElement('style');
+  style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+  document.head.appendChild(style);
 
-    addStep('Article is now live!', 'success');
-    
-    setTimeout(() => {
-      modal.classList.remove('show');
-      showToast('Article published successfully!', 'success');
-    }, 1500);
-
-  } catch (error) {
-    console.error(error);
-    addStep(`Error: ${error.message}`, 'error');
-  }
-}
+  updateSEOScore();
+</script>
 
 
 
-
-    mobileSidebarToggle.addEventListener('click', () => {
-      editorSidebar.classList.add('open');
-      sidebarOverlay.classList.add('open');
-    });
-
-    sidebarOverlay.addEventListener('click', () => {
-      editorSidebar.classList.remove('open');
-      sidebarOverlay.classList.remove('open');
-    });
-
-    function showToast(message, type = 'info') {
-      toast.textContent = message;
-      toast.className = `toast show ${type}`;
-      setTimeout(() => { toast.classList.remove('show'); }, 4000);
-    }
-
-    function escapeHtml(text) {
-      if (!text) return '';
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    let hasChanges = false;
-    titleInput.addEventListener('input', () => { hasChanges = true; });
-    
-    window.addEventListener('beforeunload', (e) => {
-      if (hasChanges && !isSaving) {
-        e.preventDefault();
-        e.returnValue = '';
-      }
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
-        e.preventDefault();
-        saveContent(false, null, true);
-      }
-    });
-
-    const style = document.createElement('style');
-    style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
-    document.head.appendChild(style);
-
-    updateSEOScore();
-  </script>
 </body>
 </html>
 
