@@ -50,7 +50,7 @@ exports.handler = async (event) => {
     const publishedDate = article.published_at || article.created_at
     const modifiedDate = article.updated_at || article.created_at
     
-    // FIXED: Use correct column names (cover_image instead of featured_image, description instead of content)
+    // Use correct column names (cover_image instead of featured_image, description instead of content)
     const content = article.description || article.content || ''
     const featuredImage = article.cover_image || article.featured_image
 
@@ -85,16 +85,16 @@ exports.handler = async (event) => {
     const schema = {
       "@context": "https://schema.org",
       "@type": type === 'post' ? 'BlogPosting' : 'Article',
-      "headline": title,
-      "description": description,
-      "keywords": keywords,
-      "articleSection": category,
+      "headline": escapeHtml(title),
+      "description": escapeHtml(description),
+      "keywords": escapeHtml(keywords),
+      "articleSection": escapeHtml(category),
       "image": ogImage,
       "datePublished": publishedDate,
       "dateModified": modifiedDate,
       "author": { 
         "@type": "Person", 
-        "name": author 
+        "name": escapeHtml(author) 
       },
       "publisher": {
         "@type": "Organization",
@@ -368,7 +368,7 @@ exports.handler = async (event) => {
 
   <script>
     function sharePost(platform) {
-      const url = '${fullUrl}';
+      const url = '${escapeJs(fullUrl)}';
       const title = '${escapeJs(title)}';
       
       const urls = {
@@ -405,16 +405,25 @@ exports.handler = async (event) => {
   }
 }
 
-// Helper functions
+// Helper functions - Server-side compatible (no browser APIs)
 function escapeHtml(text) {
   if (!text) return ''
-  const div = document.createElement('div')
-  div.textContent = text
-  return div.innerHTML
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
 }
 
 function escapeJs(text) {
   if (!text) return ''
-  return text.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t')
+  return String(text)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/\t/g, '\\t')
 }
 
