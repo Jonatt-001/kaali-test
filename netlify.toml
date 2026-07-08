@@ -2,9 +2,12 @@
   functions = "netlify/functions"
   publish = "."
 
+[build.environment]
+  NODE_VERSION = "18"
+
+# This creates the clean URLs!
 [[redirects]]
   from = "/article/*"
-  to = "/.netlify/functions/article"
+  to = "/.netlify/functions/article/:splat"
   status = 200
-  force = true
 
