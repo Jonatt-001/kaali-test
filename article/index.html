@@ -11,7 +11,7 @@
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
 <!-- Open Graph / Facebook -->
-<meta property="og:type" content="article">
+<meta property="og:type" content="website">
 <meta property="og:title" content="Latest News — De Image Magazine">
 <meta property="og:description" content="Stay informed with real journalism and global updates.">
 <meta property="og:url" content="https://deimage.com.ng/article/">
@@ -20,7 +20,6 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="en_US">
-<meta property="article:publisher" content="https://www.facebook.com/deimagemag">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
@@ -70,34 +69,6 @@
 }
 </script>
 
-<script type="application/ld+json" id="article-schema">
-{
-  "@context": "https://schema.org",
-  "@type": "NewsArticle",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://deimage.com.ng/article/"
-  },
-  "headline": "Latest News",
-  "description": "Read the latest news and updates",
-  "image": "https://deimage.com.ng/assets/og-default.jpg",
-  "datePublished": "2026-01-01T00:00:00+00:00",
-  "dateModified": "2026-01-01T00:00:00+00:00",
-  "author": {
-    "@type": "Organization",
-    "name": "De Image Magazine"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "De Image Magazine",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://deimage.com.ng/logo.png"
-    }
-  }
-}
-</script>
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -118,11 +89,7 @@
 
 <style>
 /* ================= BASE STYLES ================= */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
@@ -158,9 +125,7 @@ body {
   text-decoration: none;
 }
 
-.nav-logo span {
-  color: #f97316;
-}
+.nav-logo span { color: #f97316; }
 
 .nav-links {
   display: flex;
@@ -176,396 +141,132 @@ body {
   transition: color 0.2s;
 }
 
-.nav-links a:hover {
-  color: #f97316;
-}
+.nav-links a:hover { color: #f97316; }
 
-/* ================= ARTICLE ================= */
-.article-wrapper {
-  max-width: 720px;
-  margin: 20px auto 40px;
+/* ================= ARTICLE LISTING ================= */
+.listing-wrapper {
+  max-width: 1100px;
+  margin: 40px auto;
   padding: 0 18px;
 }
 
-.article-title {
+.page-title {
   font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: clamp(1.6rem, 3.2vw, 2.2rem);
-  line-height: 1.35;
-  letter-spacing: -0.4px;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 900;
   color: #0f172a;
-  margin-bottom: 10px;
-}
-
-.article-meta-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 18px;
-}
-
-.meta-date {
-  font-size: 11px;
-  font-weight: 500;
-  color: #64748b;
-  letter-spacing: 0.4px;
-}
-
-.meta-category {
-  font-size: 10px;
-  font-weight: 700;
-  background: rgba(249, 115, 22, 0.1);
-  color: #f97316;
-  padding: 4px 10px;
-  border-radius: 999px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #64748b;
-  cursor: pointer;
-  transition: 0.2s ease;
-  margin-bottom: 20px;
-  text-decoration: none;
-}
-
-.back-btn:hover {
-  color: #0f172a;
-  transform: translateX(-2px);
-}
-
-
-.article-image {
-  width: 100%;
-  height: auto;
-  max-height: 400px;
-  object-fit: contain;
-  border-radius: 14px;
-  margin-bottom: 24px;
-  background: #f1f5f9;
-  display: block;
-}
-
-
-
-.article-content {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  line-height: 1.75;
-  font-size: 15.5px;
-  color: #1e293b;
-}
-
-.article-content p {
-  margin-bottom: 18px;
-}
-
-.article-content img {
-  max-width: 100%;
-  border-radius: 10px;
-  margin: 20px 0;
-  height: auto;
-}
-
-.article-content h1,
-.article-content h2,
-.article-content h3 {
-  font-family: 'Unbounded', sans-serif;
-  color: #0f172a;
-  margin: 32px 0 16px;
-  font-weight: 800;
-}
-
-.article-content h1 { font-size: 2rem; }
-.article-content h2 { font-size: 1.45rem; }
-.article-content h3 { font-size: 1.15rem; }
-
-.article-content ul,
-.article-content ol {
-  margin: 18px 0;
-  padding-left: 1.2rem;
-}
-
-.article-content li {
   margin-bottom: 12px;
-  line-height: 1.8;
-}
-
-.article-content blockquote {
-  border-left: 4px solid #DC2626;
-  padding-left: 16px;
-  margin: 24px 0;
-  color: #475569;
-  font-style: italic;
-}
-
-/* ================= AUTHOR ================= */
-.author-box {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 30px 0 20px;
-  padding-top: 20px;
-  border-top: 1px solid #e5e7eb;
-}
-
-.author-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-.author-name {
-  font-size: 13px;
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.author-role {
-  font-size: 11px;
-  color: #64748b;
-  letter-spacing: 0.3px;
-}
-
-/* ================= SHARE ================= */
-.share-bar {
-  display: flex;
-  gap: 10px;
-  margin: 20px 0 30px;
-}
-
-.share-btn {
-  border-radius: 6px;
-  cursor: pointer;
-  border: 1px solid #e5e7eb;
-  background: #fff;
-  transition: 0.2s;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.share-btn:hover {
-  background: #f8fafc;
-}
-
-.share-whatsapp {
-  background: #25D366;
-  color: #fff;
-  border: none;
-}
-
-/* ================= PREMIUM RELATED POSTS ================= */
-.section-classes {
-  max-width: 100%;
-  margin: 50px auto 0;
-  padding: 0;
-  background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
-  border-top: 1px solid #f1f5f9;
-}
-
-.section-header {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 40px 18px 24px;
-}
-
-.section-label {
-  font-family: 'Space Mono', monospace;
-  font-size: 10px;
-  font-weight: 600;
-  color: #94a3b8;
-  margin-bottom: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-.section-title {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #0f172a;
   letter-spacing: -0.5px;
 }
 
-.section-title .accent {
-  color: #f97316;
+.page-subtitle {
+  font-size: 15px;
+  color: #64748b;
+  margin-bottom: 40px;
 }
 
-/* Horizontal scroll container */
-.classes-grid {
-  display: flex;
-  gap: 16px;
-  padding: 0 18px 40px;
-  max-width: 1100px;
-  margin: 0 auto;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+.articles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 60px;
 }
 
-.classes-grid::-webkit-scrollbar {
-  display: none;
-}
-
-/* Premium compact card */
-.class-card {
-  flex: 0 0 280px;
+.article-card {
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid #f1f5f9;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  scroll-snap-align: start;
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
 }
 
-.class-card:hover {
+.article-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 24px -8px rgba(15, 23, 42, 0.15);
   border-color: #e2e8f0;
 }
 
-.post-image {
+.card-image {
   width: 100%;
-  height: 160px;
+  height: 200px;
   overflow: hidden;
   background: #f8fafc;
   position: relative;
 }
 
-.post-image img {
+.card-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
 }
 
-.class-card:hover .post-image img {
+.article-card:hover .card-image img {
   transform: scale(1.05);
 }
 
-.class-card-content {
-  padding: 14px 16px 16px;
+.card-content {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.class-level {
+.card-category {
   font-family: 'Space Mono', monospace;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 600;
   color: #f97316;
   display: inline-block;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   letter-spacing: 1px;
   text-transform: uppercase;
 }
 
-.class-name {
+.card-title {
   font-family: 'Unbounded', sans-serif;
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 700;
   color: #0f172a;
-  margin-bottom: 6px;
-  line-height: 1.3;
+  margin-bottom: 10px;
+  line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.class-desc {
-  font-size: 12px;
-  color: #64748b;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* ================= FOOTER ================= */
-footer {
-  background: #0f172a;
-  color: #fff;
-  padding: 60px 0 30px;
-  margin-top: 80px;
-}
-
-.footer-grid {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 18px;
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 40px;
-}
-
-.footer-brand .nav-logo {
-  color: #fff;
-  margin-bottom: 16px;
-  display: inline-block;
-}
-
-.footer-brand p {
-  color: #94a3b8;
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.footer-col h4 {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 16px;
-  color: #fff;
-}
-
-.footer-col a {
-  display: block;
-  color: #94a3b8;
-  text-decoration: none;
-  font-size: 14px;
-  margin-bottom: 8px;
-  transition: color 0.2s;
-}
-
-.footer-col a:hover {
-  color: #f97316;
-}
-
-.footer-bottom {
-  max-width: 1100px;
-  margin: 40px auto 0;
-  padding: 20px 18px 0;
-  border-top: 1px solid #1e293b;
-  text-align: center;
-  color: #64748b;
+.card-excerpt {
   font-size: 13px;
+  color: #64748b;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 16px;
+  flex: 1;
 }
 
-/* ================= PROGRESS BAR ================= */
-#progressBar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 3px;
-  width: 0%;
-  background: #DC2626;
-  z-index: 9999;
-  transition: width 0.1s linear;
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  color: #94a3b8;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.card-author {
+  font-weight: 600;
+  color: #64748b;
 }
 
 /* ================= LOADING SKELETON ================= */
@@ -576,16 +277,9 @@ footer {
   border-radius: 8px;
 }
 
-.skeleton-title {
-  height: 40px;
-  width: 80%;
-  margin-bottom: 16px;
-}
-
-.skeleton-text {
-  height: 20px;
-  width: 100%;
-  margin-bottom: 12px;
+.skeleton-card {
+  height: 380px;
+  border-radius: 12px;
 }
 
 @keyframes loading {
@@ -593,35 +287,21 @@ footer {
   100% { background-position: -200% 0; }
 }
 
-/* ================= RESPONSIVE ================= */
-@media (max-width: 768px) {
-  .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-  
-  .nav-links {
-    display: none;
-  }
-  
-  .article-wrapper {
-    padding: 0 16px;
-  }
-
-  .class-card {
-    flex: 0 0 260px;
-  }
-
-  .section-header {
-    padding: 30px 16px 20px;
-  }
-
-  .classes-grid {
-    padding: 0 16px 30px;
-  }
+/* ================= EMPTY STATE ================= */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: #64748b;
 }
 
-/* ================= PREMIUM FOOTER ================= */
+.empty-state h2 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+  color: #0f172a;
+}
+
+/* ================= FOOTER ================= */
 footer {
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   color: #fff;
@@ -656,9 +336,7 @@ footer {
   letter-spacing: -0.5px;
 }
 
-.footer-brand .nav-logo span {
-  color: #f97316;
-}
+.footer-brand .nav-logo span { color: #f97316; }
 
 .footer-brand p {
   font-size: 13px;
@@ -693,270 +371,44 @@ footer {
   transform: translateX(4px);
 }
 
-/* ================= COMPACT PREMIUM LAYOUT ================= */
-.article-wrapper {
-  max-width: 640px;
-  margin: 16px auto 32px;
-  padding: 0 16px;
-}
-
-.article-title {
-  font-size: clamp(1.4rem, 2.8vw, 1.9rem);
-  line-height: 1.3;
-  margin-bottom: 8px;
-  letter-spacing: -0.5px;
-}
-
-.article-meta-row {
-  gap: 8px;
-  margin-bottom: 14px;
-}
-
-.meta-date {
-  font-size: 10px;
-}
-
-.meta-category {
-  font-size: 9px;
-  padding: 3px 8px;
-}
-
-
-.article-image {
-  height: auto;
-  max-height: 300px;
-  margin-bottom: 20px;
-  border-radius: 12px;
-  object-fit: contain;
-}
-
-
-
-
-.author-box {
-  margin: 24px 0 16px;
-  padding-top: 16px;
-  gap: 10px;
-}
-
-.author-avatar {
-  width: 38px;
-  height: 38px;
-}
-
-.author-name {
+.footer-bottom {
+  max-width: 900px;
+  margin: 30px auto 0;
+  padding: 20px 0 0;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
+  color: rgba(255,255,255,0.5);
   font-size: 12px;
 }
 
-.author-role {
-  font-size: 10px;
-}
-
-.share-bar {
-  gap: 8px;
-  margin: 16px 0 24px;
-}
-
-.share-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 5px;
-}
-
-.share-btn svg {
-  width: 12px;
-  height: 12px;
-}
-
-.article-content {
-  font-size: 14.5px;
-  line-height: 1.7;
-}
-
-.article-content p {
-  margin-bottom: 14px;
-}
-
-.article-content h1 {
-  font-size: 1.7rem;
-  margin: 24px 0 12px;
-}
-
-.article-content h2 {
-  font-size: 1.3rem;
-  margin: 22px 0 10px;
-}
-
-.article-content h3 {
-  font-size: 1.05rem;
-  margin: 18px 0 8px;
-}
-
-.article-content ul,
-.article-content ol {
-  margin: 14px 0;
-  padding-left: 1rem;
-}
-
-.article-content li {
-  margin-bottom: 8px;
-  line-height: 1.7;
-}
-
-.article-content img {
-  margin: 16px 0;
-  border-radius: 8px;
-}
-
-.article-content figure {
-  margin: 20px 0;
-}
-
-.article-content figcaption {
-  margin-top: 6px;
-  font-size: 11px;
-}
-
-.article-content blockquote {
-  padding-left: 14px;
-  margin: 18px 0;
-  font-size: 14px;
-}
-
-.back-btn {
-  margin-bottom: 14px;
-  font-size: 11px;
-}
-
-#progressBar {
-  height: 2px;
-}
-
-#menu-container {
-  min-height: 60px;
-}
-
-/* ================= MOBILE COMPACT ================= */
+/* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
-  .article-wrapper {
-    padding: 0 14px;
-    margin: 12px auto 24px;
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
   }
-
-  .article-title {
-    font-size: 1.3rem;
-  }
-
-
-.article-image {
-  height: auto;
-  max-height: 250px;
-  margin-bottom: 16px;
-}
-
-
-
-  .article-content {
-    font-size: 15px;
-    line-height: 1.8;
-  }
-
-  .article-content h2 {
-    font-size: 1.2rem;
-    margin: 18px 0 8px;
-  }
-
-  .article-content h3 {
-    font-size: 1rem;
-    margin: 14px 0 6px;
-  }
-
-  .section-title {
-    font-size: 1.2rem;
-  }
-
-  .class-card {
-    flex: 0 0 240px;
-  }
-
-  .post-image {
-    height: 140px;
-  }
-
-  .class-name {
-    font-size: 13px;
-  }
-
-  .class-desc {
-    font-size: 11px;
+  
+  .nav-links { display: none; }
+  
+  .listing-wrapper { padding: 0 16px; }
+  
+  .articles-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
 }
 
-/* ================= PREMIUM TOUCHES ================= */
-html {
-  scroll-behavior: smooth;
-}
-
-::selection {
-  background: #f97316;
-  color: white;
-}
-
-
-.article-image,
-.post-image img {
-  transition: opacity 0.3s;
-}
-
-.article-image[loading],
-.post-image img[loading] {
-  opacity: 0.5;
-}
-
-
-
-/* ================= ARTICLE LINKS - CLEARLY VISIBLE ================= */
-.article-content a,
-.article-content a:visited {
-  color: #2563eb;
-  text-decoration: underline;
-  text-decoration-color: rgba(37, 99, 235, 0.4);
-  text-underline-offset: 3px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  border-radius: 2px;
-  padding: 0 1px;
-}
-
-.article-content a:hover {
-  color: #1d4ed8;
-  text-decoration-color: #2563eb;
-  background: rgba(37, 99, 235, 0.08);
-  text-decoration-thickness: 2px;
-}
-
-/* Internal links with arrow indicator */
-.article-content a[data-internal-link="true"]::after {
-  content: " ↗";
-  font-size: 0.75em;
-  opacity: 0.7;
-  vertical-align: super;
-}
-
-
-
+html { scroll-behavior: smooth; }
+::selection { background: #f97316; color: white; }
 </style>
 </head>
 
 <body>
 
-<!-- READING PROGRESS -->
-<div id="progressBar"></div>
-
 <!-- NAV -->
 <div id="menu-container">
   <div class="nav-wrapper">
-    <a href="../index.html" class="nav-logo">DE IMAGE<span>★</span>MAG</a>
+    <a href="/" class="nav-logo">DE IMAGE<span>★</span>MAG</a>
     <div class="nav-links">
       <a href="/">Home</a>
       <a href="/?category=politics">Politics</a>
@@ -967,79 +419,21 @@ html {
   </div>
 </div>
 
-<!-- ARTICLE -->
-<div class="article-wrapper">
+<!-- ARTICLE LISTING -->
+<div class="listing-wrapper">
+  <h1 class="page-title">Latest Articles</h1>
+  <p class="page-subtitle">Discover stories, insights, and updates from De Image Magazine</p>
 
-<a href="javascript:history.back()" class="back-btn">← Back</a>
-
-<h1 id="title" class="article-title">
-  <div class="skeleton skeleton-title"></div>
-</h1>
-
-<div class="article-meta-row">
-  <span id="date" class="meta-date"></span>
-  <span id="category" class="meta-category"></span>
-</div>
-
-<img id="image" class="article-image" style="display:none;" onerror="this.style.display='none'">
-
-<!-- AUTHOR -->
-<div class="author-box">
-  <img class="author-avatar" src="https://i.postimg.cc/13JJdwM6/IMG-8276.png" alt="Author">
-  <div>
-    <div id="authorName" class="author-name">Admin</div>
-    <div class="author-role">Writer • DE IMAGE MAG</div>
+  <div id="articlesGrid" class="articles-grid">
+    <!-- Loading skeletons -->
+    <div class="skeleton skeleton-card"></div>
+    <div class="skeleton skeleton-card"></div>
+    <div class="skeleton skeleton-card"></div>
+    <div class="skeleton skeleton-card"></div>
+    <div class="skeleton skeleton-card"></div>
+    <div class="skeleton skeleton-card"></div>
   </div>
 </div>
-
-<!-- SHARE -->
-<div class="share-bar">
-  <button class="share-btn" onclick="sharePost('twitter')" title="Share on Twitter">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M22 5.8c-.7.3-1.5.6-2.3.7.8-.5 1.4-1.3 1.7-2.3-.8.5-1.7.9-2.6 1.1A4.1 4.1 0 0015.5 4c-2.3 0-4.1 1.9-4.1 4.2 0 .3 0 .6.1.9-3.4-.2-6.4-1.8-8.4-4.3-.4.7-.6 1.5-.6 2.3 0 1.5.8 2.8 2 3.6-.7 0-1.3-.2-1.9-.5v.1c0 2.1 1.5 3.8 3.4 4.2-.4.1-.8.2-1.3.2-.3 0-.6 0-.9-.1.6 1.8 2.3 3.2 4.3 3.2A8.3 8.3 0 012 19.5a11.7 11.7 0 006.3 1.9c7.6 0 11.8-6.4 11.8-11.9v-.5c.8-.6 1.4-1.3 1.9-2.2z"/>
-    </svg>
-  </button>
-
-  <button class="share-btn" onclick="sharePost('facebook')" title="Share on Facebook">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M22 12a10 10 0 10-11.6 9.9v-7H7.7v-3h2.7V9.6c0-2.7 1.6-4.2 4-4.2 1.2 0 2.4.2 2.4.2v2.7h-1.3c-1.3 0-1.7.8-1.7 1.6v2h3l-.5 3h-2.5v7A10 10 0 0022 12z"/>
-    </svg>
-  </button>
-
-  <button class="share-btn share-whatsapp" onclick="sharePost('whatsapp')" title="Share on WhatsApp">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M20 3.9A11.8 11.8 0 0012.1 1C6 1 1 6 1 12.1c0 2.1.6 4.1 1.7 5.9L1 23l5.2-1.6c1.7.9 3.7 1.4 5.8 1.4 6.1 0 11.1-5 11.1-11.1 0-3-.1-5.9-3.1-7.8zM12 20.3c-1.8 0-3.6-.5-5.1-1.5l-.4-.2-3.1.9.9-3-.2-.4a8.3 8.3 0 01-1.3-4.5c0-4.6 3.7-8.3 8.3-8.3 2.2 0 4.3.9 5.9 2.4a8.3 8.3 0 012.4 5.9c0 4.6-3.7 8.3-8.3 8.3zm4.5-6.2c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1-.1.2-.5.7-.6.8-.1.1-.2.2-.4.1-.2-.1-.9-.3-1.7-1-.7-.6-1.1-1.3-1.3-1.5-.1-.2 0-.3.1-.4.1-.1.2-.2.3-.3.1-.1.2-.2.2-.3.1-.1 0-.3 0-.4s-.5-1.3-.7-1.8c-.2-.5-.4-.4-.5-.4h-.4c-.1 0-.3 0-.5.2s-.7.7-.7 1.6.7 1.8.8 1.9c.1.1 1.4 2.2 3.3 3 .5.2.9.4 1.2.5.5.2 1 .2 1.3.1.4-.1 1.2-.5 1.4-.9.2-.4.2-.8.2-.9 0-.1-.2-.2-.4-.3z"/>
-    </svg>
-  </button>
-
-  <button class="share-btn" onclick="copyLink()" title="Copy Link">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M3.9 12a5 5 0 015-5h3v2h-3a3 3 0 000 6h3v2h-3a5 5 0 01-5-5zm7-1h2v2h-2v-2zm4.1-4h-3v2h3a3 3 0 010 6h-3v2h3a5 5 0 000-10z"/>
-    </svg>
-  </button>
-</div>
-
-<div id="content" class="article-content">
-  <div class="skeleton skeleton-text"></div>
-  <div class="skeleton skeleton-text"></div>
-  <div class="skeleton skeleton-text" style="width: 60%"></div>
-</div>
-
-</div>
-
-<!-- YOU MAY ALSO -->
-<section class="section-classes">
-  <div class="section-header">
-    <p class="section-label">✦ You May Also</p>
-    <h2 class="section-title">MORE <span class="accent">STORIES</span></h2>
-  </div>
-
-  <div id="relatedPosts" class="classes-grid">
-    <div class="skeleton" style="height: 280px; flex: 0 0 280px; border-radius: 12px;"></div>
-    <div class="skeleton" style="height: 280px; flex: 0 0 280px; border-radius: 12px;"></div>
-    <div class="skeleton" style="height: 280px; flex: 0 0 280px; border-radius: 12px;"></div>
-  </div>
-</section>
 
 <!-- FOOTER -->
 <footer>
@@ -1083,18 +477,6 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-function getSlug() {
-  const params = new URLSearchParams(window.location.search);
-  const querySlug = params.get("slug");
-  if (querySlug) return querySlug;
-
-  const path = window.location.pathname;
-  const match = path.match(/\/article\/([^\/]+)/);
-  if (match) return match[1];
-
-  return null;
-}
-
 function cleanText(html, limit = 155) {
   if (!html) return "";
   const text = html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
@@ -1108,240 +490,85 @@ function formatDate(dateString) {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric'
   });
 }
 
-function formatDateISO(dateString) {
-  if (!dateString) return new Date().toISOString();
-  return new Date(dateString).toISOString();
-}
-
-async function loadPost() {
-  const slug = getSlug();
-
-  if (!slug) {
-    document.getElementById("title").innerText = "Post not found";
-    document.getElementById("relatedPosts").innerHTML = "";
-    return;
-  }
-
+async function loadArticles() {
   try {
-    const { data: post, error } = await supabase
-      .from('content')
+    // FIXED: Query 'articles' table instead of 'content'
+    const { data: articles, error } = await supabase
+      .from('articles')
       .select('*')
-      .eq('slug', slug)
       .eq('status', 'published')
-      .single();
+      .order('published_at', { ascending: false })
+      .limit(50);
 
-    if (error || !post) {
-      document.getElementById("title").innerText = "Post not found";
-      document.getElementById("relatedPosts").innerHTML = "";
+    if (error) {
+      console.error('Error loading articles:', error);
+      document.getElementById('articlesGrid').innerHTML = `
+        <div class="empty-state" style="grid-column: 1 / -1;">
+          <h2>Error Loading Articles</h2>
+          <p>Please try again later.</p>
+        </div>
+      `;
       return;
     }
 
-    try {
-      await supabase
-        .from('content')
-        .update({ views: (post.views || 0) + 1 })
-        .eq('id', post.id);
-    } catch (err) {
-      console.log("View tracking error:", err);
+    if (!articles || articles.length === 0) {
+      document.getElementById('articlesGrid').innerHTML = `
+        <div class="empty-state" style="grid-column: 1 / -1;">
+          <h2>No Articles Yet</h2>
+          <p>Check back soon for new content!</p>
+        </div>
+      `;
+      return;
     }
-
-    const seoTitle = post.title || "News Article";
-    const seoDescription = post.excerpt || cleanText(post.body, 155);
-    const url = `https://deimage.com.ng/article/${post.slug}/`;
-    const image = post.featured_image && post.featured_image.trim() !== "" 
-      ? post.featured_image 
-      : "https://via.placeholder.com/1200x630/f1f5f9/64748b?text=De+Image+Magazine";
-
-    document.title = seoTitle + " | De Image Magazine";
-
-    // Update all meta tags
-    updateMeta("description", seoDescription);
-    updateMeta("og:title", seoTitle, true);
-    updateMeta("og:description", seoDescription, true);
-    updateMeta("og:url", url, true);
-    updateMeta("og:image", image, true);
-    updateMeta("twitter:title", seoTitle);
-    updateMeta("twitter:description", seoDescription);
-    updateMeta("twitter:image", image);
-    updateMeta("article:published_time", formatDateISO(post.created_at), true);
-    updateMeta("article:modified_time", formatDateISO(post.updated_at), true);
-    updateMeta("article:author", post.author || "De Image Magazine", true);
-    updateMeta("article:section", post.category || "General", true);
-
-    let canonical = document.querySelector("link[rel='canonical']");
-    if (!canonical) {
-      canonical = document.createElement("link");
-      canonical.setAttribute("rel", "canonical");
-      document.head.appendChild(canonical);
-    }
-    canonical.setAttribute("href", url);
-
-    // Update JSON-LD Schema
-    updateSchema(post);
-
-    function updateMeta(name, content, isProperty = false) {
-      if (!content) return;
-      let tag = isProperty
-        ? document.querySelector(`meta[property="${name}"]`)
-        : document.querySelector(`meta[name="${name}"]`);
-
-      if (!tag) {
-        tag = document.createElement("meta");
-        if (isProperty) tag.setAttribute("property", name);
-        else tag.setAttribute("name", name);
-        document.head.appendChild(tag);
-      }
-      tag.setAttribute("content", content);
-    }
-
-    function updateSchema(post) {
-      const schema = {
-        "@context": "https://schema.org",
-        "@type": "NewsArticle",
-        "mainEntityOfPage": {
-          "@type": "WebPage",
-          "@id": url
-        },
-        "headline": post.title,
-        "description": seoDescription,
-        "image": image,
-        "datePublished": formatDateISO(post.created_at),
-        "dateModified": formatDateISO(post.updated_at),
-        "author": {
-          "@type": "Person",
-          "name": post.author || "De Image Magazine"
-        },
-        "publisher": {
-          "@type": "Organization",
-          "name": "De Image Magazine",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://deimage.com.ng/logo.png"
-          }
-        },
-        "articleSection": post.category || "General",
-        "wordCount": cleanText(post.body).split(' ').length
-      };
-
-      const schemaScript = document.getElementById('article-schema');
-      if (schemaScript) {
-        schemaScript.textContent = JSON.stringify(schema);
-      }
-    }
-
-    // Render content
-    document.getElementById("title").innerHTML = formatTitle(post.title);
-    document.getElementById("date").innerText = formatDate(post.updated_at || post.created_at);
-    document.getElementById("category").innerText = post.category || "General";
-    document.getElementById("authorName").innerText = post.author || "Admin";
-
-    // Handle image
-    const imgElement = document.getElementById("image");
-    if (image && image.includes('placeholder')) {
-      imgElement.style.display = 'none';
-    } else {
-      imgElement.src = image;
-      imgElement.style.display = 'block';
-      imgElement.onerror = function() {
-        this.style.display = 'none';
-      };
-    }
-
-    document.getElementById("content").innerHTML = post.body || "";
-
-    // Related posts
-    const { data: allPosts } = await supabase
-      .from('content')
-      .select('id, title, slug, category, featured_image, body, created_at')
-      .eq('status', 'published')
-      .neq('id', post.id)
-      .order('created_at', { ascending: false })
-      .limit(10);
-
-    let related = allPosts?.filter(p => p.category === post.category) || [];
-    if (related.length < 3) {
-      related = allPosts?.filter(p => p.id !== post.id) || [];
-    }
-    related = related.slice(0, 6);
 
     let html = "";
-    related.forEach(rPost => {
-      const preview = cleanText(rPost.body, 90);
-      const rImg = rPost.featured_image && rPost.featured_image.trim() !== ""
-        ? rPost.featured_image
-        : "https://via.placeholder.com/400x240/f8fafc/94a3b8?text=Story";
+    articles.forEach(article => {
+      // FIXED: Read from correct columns
+      const image = article.cover_image || article.featured_image;
+      const excerpt = article.excerpt || cleanText(article.description || article.content, 120);
+      
+      const cardImage = image && image.trim() !== "" && !image.startsWith('data:image')
+        ? image
+        : "https://via.placeholder.com/600x400/f8fafc/94a3b8?text=De+Image+Magazine";
 
       html += `
-        <article class="class-card" onclick="window.location.href='/article/${rPost.slug}/'">
-          <div class="post-image">
-            <img src="${rImg}" alt="${rPost.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x240/f8fafc/94a3b8?text=Story'">
+        <a href="/article/${article.slug}" class="article-card">
+          <div class="card-image">
+            <img src="${cardImage}" alt="${article.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/600x400/f8fafc/94a3b8?text=Story'">
           </div>
-          <div class="class-card-content">
-            <span class="class-level">${rPost.category || "General"}</span>
-            <h3 class="class-name">${rPost.title}</h3>
-            <p class="class-desc">${preview}</p>
+          <div class="card-content">
+            <span class="card-category">${article.category || "General"}</span>
+            <h2 class="card-title">${article.title}</h2>
+            <p class="card-excerpt">${excerpt}</p>
+            <div class="card-meta">
+              <span class="card-author">${article.author || "De Image Magazine"}</span>
+              <span>•</span>
+              <span>${formatDate(article.published_at || article.created_at)}</span>
+            </div>
           </div>
-        </article>
+        </a>
       `;
     });
 
-    document.getElementById("relatedPosts").innerHTML = html;
+    document.getElementById('articlesGrid').innerHTML = html;
 
   } catch (err) {
     console.error("Load error:", err);
-    document.getElementById("title").innerText = "Error loading post";
-    document.getElementById("relatedPosts").innerHTML = "";
+    document.getElementById('articlesGrid').innerHTML = `
+      <div class="empty-state" style="grid-column: 1 / -1;">
+        <h2>Error Loading Articles</h2>
+        <p>Please try again later.</p>
+      </div>
+    `;
   }
 }
 
-function formatTitle(text) {
-  if (!text.includes(" - ")) return text;
-  const parts = text.split(" - ");
-  const words = parts[0].split(" ");
-  if (words.length > 2) {
-    words[0] = `<span style="color: #f97316; font-weight: 800;">${words[0]}</span>`;
-  }
-  return `
-    ${words.join(" ")}
-    <span style="opacity: 0.6; margin: 0 6px; font-weight: 500;">—</span>
-    <span style="font-style: italic; color: #64748b;">${parts[1]}</span>
-  `;
-}
-
-function sharePost(platform) {
-  const url = window.location.href;
-  const title = document.getElementById("title").innerText;
-
-  const urls = {
-    twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-    whatsapp: `https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}`
-  };
-
-  if (urls[platform]) {
-    window.open(urls[platform], '_blank', 'width=600,height=400');
-  }
-}
-
-function copyLink() {
-  navigator.clipboard.writeText(window.location.href).then(() => {
-    alert('Link copied to clipboard!');
-  });
-}
-
-window.addEventListener('scroll', () => {
-  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-  const scrolled = (winScroll / height) * 100;
-  document.getElementById("progressBar").style.width = scrolled + "%";
-});
-
-loadPost();
+loadArticles();
 </script>
 </body>
 </html>
